@@ -1,4 +1,4 @@
-import Net from '../models/net.model.js';
+import Net from '../models/nets.model.js';
 
 export async function listNets(req, res, next) {
   try {
