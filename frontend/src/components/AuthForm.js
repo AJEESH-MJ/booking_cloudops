@@ -39,11 +39,12 @@ export default function AuthForm({ apiBase, onLogin }) {
   };
 
   return (
-    <div style={{ padding: 12, border: '1px solid #ddd', borderRadius: 6 }}>
-      <h3>{mode === 'login' ? 'Login' : 'Register'}</h3>
-      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div>
+      <h3 className="text-lg font-medium mb-3">{mode === 'login' ? 'Login' : 'Register'}</h3>
+      <form onSubmit={submit} className="space-y-3">
         {mode === 'register' && (
           <input
+            className="w-full border rounded px-3 py-2"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -51,6 +52,7 @@ export default function AuthForm({ apiBase, onLogin }) {
           />
         )}
         <input
+          className="w-full border rounded px-3 py-2"
           placeholder="Email"
           type="email"
           value={email}
@@ -58,24 +60,21 @@ export default function AuthForm({ apiBase, onLogin }) {
           required
         />
         <input
+          className="w-full border rounded px-3 py-2"
           placeholder="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="submit">{mode === 'login' ? 'Login' : 'Register'}</button>
-          <button type="button" onClick={toggle} style={{ background: '#eee' }}>
-            {mode === 'login' ? 'Switch to Register' : 'Switch to Login'}
-          </button>
+
+        <div className="flex gap-2">
+          <button type="submit" className="btn btn-primary"> {mode === 'login' ? 'Login' : 'Register'} </button>
+          <button type="button" onClick={toggle} className="btn btn-ghost"> {mode === 'login' ? 'Switch to Register' : 'Switch to Login'} </button>
         </div>
       </form>
 
-      {message && <div style={{ marginTop: 8 }}>{message}</div>}
-      <div style={{ marginTop: 10, fontSize: 12, color: '#666' }}>
-        This demo stores token in localStorage for persistence.
-      </div>
+      {message && <div className="mt-3 text-sm text-red-600">{message}</div>}
     </div>
   );
 }

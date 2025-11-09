@@ -39,33 +39,37 @@ export default function BookingForm({ net, token, apiBase }) {
     }
   };
 
-  return (
+   return (
     <div>
-      <h3>Book {net.name}</h3>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-        <select value={duration} onChange={e => setDuration(Number(e.target.value))}>
+      <h3 className="text-lg font-medium mb-3">Book {net.name}</h3>
+
+      <div className="flex gap-2 items-center">
+        <input className="border rounded px-3 py-2" type="date" value={date} onChange={e => setDate(e.target.value)} />
+        <select className="border rounded px-3 py-2" value={duration} onChange={e => setDuration(Number(e.target.value))}>
           <option value={30}>30 min</option>
           <option value={60}>60 min</option>
           <option value={90}>90 min</option>
         </select>
-        <button onClick={checkAvailability}>Check</button>
+        <button onClick={checkAvailability} className="btn btn-primary">Check</button>
       </div>
 
-      <div style={{ marginTop: 12 }}>
-        <h4>Options</h4>
-        {options.length === 0 && <div>No options. Choose date and click Check.</div>}
-        <ul>
+      <div className="mt-4">
+        <h4 className="font-semibold mb-2">Options</h4>
+        {options.length === 0 && <div className="text-sm text-gray-500">No options. Choose date and click Check.</div>}
+        <div className="space-y-2">
           {options.map((o, i) => (
-            <li key={i} style={{ margin: 6 }}>
-              <div>{new Date(o.startAt).toLocaleString()} - {new Date(o.endAt).toLocaleTimeString()}</div>
-              <button onClick={() => book(o)}>Book this</button>
-            </li>
+            <div key={i} className="flex items-center justify-between border rounded p-3">
+              <div>
+                <div className="font-medium">{new Date(o.startAt).toLocaleString()}</div>
+                <div className="text-sm text-gray-500">{new Date(o.endAt).toLocaleTimeString()}</div>
+              </div>
+              <button onClick={() => book(o)} className="btn btn-primary">Book</button>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
 
-      {message && <div style={{ marginTop: 12, color: 'green' }}>{message}</div>}
+      {message && <div className="mt-3 text-sm text-gray-700">{message}</div>}
     </div>
   );
 }

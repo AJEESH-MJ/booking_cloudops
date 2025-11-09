@@ -2,22 +2,23 @@ import React from 'react';
 
 export default function Navbar({ user, onLogout }) {
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 12
-    }}>
-      <div style={{ fontWeight: 'bold' }}>Cricket Academy</div>
-      <div>
-        {user ? (
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <div style={{ fontSize: 14 }}>{user.email ?? user.id}</div>
-            <button onClick={onLogout} style={{ padding: '6px 10px' }}>Logout</button>
-          </div>
-        ) : (
-          <div style={{ fontSize: 14, color: '#666' }}>Not logged in</div>
-        )}
+    <div className="bg-white border-b">
+      <div className="container flex items-center justify-between py-4">
+        <div className="flex items-center gap-3">
+          <div className="text-xl font-bold text-brand-500">Cricket Academy</div>
+          <div className="text-sm text-gray-500">Booking demo</div>
+        </div>
+
+        <div>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <div className="text-sm text-gray-700">{user.email ?? user.id}</div>
+              <button onClick={onLogout} className="btn btn-ghost">Logout</button>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-600">Not logged in</div>
+          )}
+        </div>
       </div>
     </div>
   );

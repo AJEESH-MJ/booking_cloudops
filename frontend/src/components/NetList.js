@@ -3,21 +3,22 @@ import React from 'react';
 export default function NetList({ nets, onSelect, selected }) {
   return (
     <div>
-      <h2>Nets</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-xl font-semibold">Nets</h2>
+        <div className="text-sm text-gray-500">{nets.length} available</div>
+      </div>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {nets.map(n => (
-          <li key={n._id} style={{ margin: 8 }}>
+          <li key={n._id}>
             <button
               onClick={() => onSelect(n)}
-              style={{
-                padding: '8px 12px',
-                background: selected && selected._id === n._id ? '#0366d6' : '#eee',
-                color: selected && selected._id === n._id ? '#fff' : '#000',
-                border: 'none',
-                borderRadius: 4
-              }}
+              className={`w-full text-left p-3 rounded-md border hover:shadow-sm transition ${
+                selected && selected._id === n._id ? 'bg-brand-500 text-white' : 'bg-white'
+              }`}
             >
-              {n.name} {n.location ? `(${n.location})` : ''}
+              <div className="font-medium">{n.name}</div>
+              <div className="text-sm text-gray-500">{n.location || 'Main ground'}</div>
             </button>
           </li>
         ))}
