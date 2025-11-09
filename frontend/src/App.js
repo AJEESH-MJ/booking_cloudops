@@ -6,7 +6,7 @@ import MyBookings from './components/MyBookings.js';
 import AuthForm from './components/AuthForm.js';
 import Navbar from './components/Navbar.js';
 
-const API = process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
+const API = process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
 
 function App() {
   const [nets, setNets] = useState([]);
