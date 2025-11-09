@@ -2,9 +2,16 @@ import mongoose from 'mongoose';
 import Slot from '../models/slot.model.js';
 import Booking from '../models/booking.model.js';
 
-const SLOT_INTERVAL_MIN = parseInt(process.env.SLOT_INTERVAL_MINUTES || '60', 10);
+const SLOT_INTERVAL_MIN = parseInt(
+  process.env.SLOT_INTERVAL_MINUTES || '60',
+  10
+);
 
-export async function findAvailableOptions({ date, durationMinutes, nets = [] }) {
+export async function findAvailableOptions({
+  date,
+  durationMinutes,
+  nets = [],
+}) {
   const slotsNeeded = Math.ceil(durationMinutes / SLOT_INTERVAL_MIN);
   const query = { date, booked: false };
   if (nets.length) query.net = { $in: nets };
@@ -23,15 +30,19 @@ export async function findAvailableOptions({ date, durationMinutes, nets = [] })
     for (let i = 0; i <= list.length - slotsNeeded; i++) {
       let ok = true;
       for (let k = 1; k < slotsNeeded; k++) {
-        if (new Date(list[i + k - 1].endAt).getTime() !== new Date(list[i + k].startAt).getTime()) {
-          ok = false; break;
+        if (
+          new Date(list[i + k - 1].endAt).getTime() !==
+          new Date(list[i + k].startAt).getTime()
+        ) {
+          ok = false;
+          break;
         }
       }
       if (ok) {
         options.push({
           net: netId,
           startAt: list[i].startAt,
-          endAt: list[i + slotsNeeded - 1].endAt
+          endAt: list[i + slotsNeeded - 1].endAt,
         });
       }
     }
@@ -39,7 +50,14 @@ export async function findAvailableOptions({ date, durationMinutes, nets = [] })
   return options;
 }
 
-export async function bookSlot({ userId, netId, date, startAt, endAt, durationMinutes }) {
+export async function bookSlot({
+  userId,
+  netId,
+  date,
+  startAt,
+  endAt,
+  durationMinutes,
+}) {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
@@ -48,30 +66,39 @@ export async function bookSlot({ userId, netId, date, startAt, endAt, durationMi
       date,
       startAt: { $gte: new Date(startAt) },
       endAt: { $lte: new Date(endAt) },
-      booked: false
+      booked: false,
     }).session(session);
 
     const slotsNeeded = Math.ceil(durationMinutes / SLOT_INTERVAL_MIN);
     if (slots.length < slotsNeeded) throw new Error('Not enough free slots');
 
-    const [booking] = await Booking.create([{
-      user: userId,
-      net: netId,
-      date,
-      startAt: new Date(startAt),
-      endAt: new Date(endAt),
-      durationMinutes
-    }], { session });
+    const [booking] = await Booking.create(
+      [
+        {
+          user: userId,
+          net: netId,
+          date,
+          startAt: new Date(startAt),
+          endAt: new Date(endAt),
+          durationMinutes,
+        },
+      ],
+      { session }
+    );
 
-    const update = await Slot.updateMany({
-      net: netId,
-      date,
-      startAt: { $gte: new Date(startAt) },
-      endAt: { $lte: new Date(endAt) },
-      booked: false
-    }, {
-      $set: { booked: true, booking: booking._id }
-    }, { session });
+    const update = await Slot.updateMany(
+      {
+        net: netId,
+        date,
+        startAt: { $gte: new Date(startAt) },
+        endAt: { $lte: new Date(endAt) },
+        booked: false,
+      },
+      {
+        $set: { booked: true, booking: booking._id },
+      },
+      { session }
+    );
 
     // in some versions update.matchedCount may be undefined; use modifiedCount if matchedCount not present
     const matched = update.matchedCount ?? update.modifiedCount ?? 0;

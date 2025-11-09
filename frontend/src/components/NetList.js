@@ -14,11 +14,15 @@ export default function NetList({ nets, onSelect, selected }) {
             <button
               onClick={() => onSelect(n)}
               className={`w-full text-left p-3 rounded-md border hover:shadow-sm transition ${
-                selected && selected._id === n._id ? 'bg-brand-500 text-white' : 'bg-white'
+                selected && selected._id === n._id
+                  ? 'bg-brand-500 text-white'
+                  : 'bg-white'
               }`}
             >
               <div className="font-medium">{n.name}</div>
-              <div className="text-sm text-gray-500">{n.location || 'Main ground'}</div>
+              <div className="text-sm text-gray-500">
+                {n.location || 'Main ground'}
+              </div>
             </button>
           </li>
         ))}

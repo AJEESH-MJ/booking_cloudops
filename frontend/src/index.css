@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* in frontend/src/index.css — ensure these exist */
+.btn {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition;
+}
+.btn-primary {
+  @apply bg-blue-500 text-white hover:bg-blue-600;
+}
+.btn-ghost {
+  @apply bg-gray-100 text-gray-800 hover:bg-gray-200;
+}
+.hover\:scale-102:hover { transform: scale(1.02); }

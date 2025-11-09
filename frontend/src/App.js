@@ -5,7 +5,8 @@ import Main from './pages/Main.js';
 import './index.css';
 
 // single source of API base
-export const API = process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
+export const API =
+  process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
 
 function App() {
   // token state is the source of truth for auth in memory;
@@ -29,7 +30,11 @@ function App() {
       const parts = token.split('.');
       if (parts.length === 3) {
         const payload = JSON.parse(atob(parts[1]));
-        setCurrentUser({ id: payload.sub, role: payload.role, email: payload.email ?? null });
+        setCurrentUser({
+          id: payload.sub,
+          role: payload.role,
+          email: payload.email ?? null,
+        });
       } else {
         setCurrentUser(null);
       }
@@ -39,7 +44,7 @@ function App() {
   }, [token]);
 
   // call this when login succeeds (e.g. AuthForm will call onLogin(token))
-  const handleLogin = (newToken) => {
+  const handleLogin = newToken => {
     setToken(newToken);
     // after login we redirect to the protected app area
     navigate('/app', { replace: true });
@@ -65,7 +70,11 @@ function App() {
         path="/app/*"
         element={
           isAuthenticated ? (
-            <Main token={token} onLogout={handleLogout} currentUser={currentUser} />
+            <Main
+              token={token}
+              onLogout={handleLogout}
+              currentUser={currentUser}
+            />
           ) : (
             <Navigate to="/" replace />
           )
@@ -73,7 +82,10 @@ function App() {
       />
 
       {/* fallback */}
-      <Route path="*" element={<Navigate to={isAuthenticated ? '/app' : '/'} replace />} />
+      <Route
+        path="*"
+        element={<Navigate to={isAuthenticated ? '/app' : '/'} replace />}
+      />
     </Routes>
   );
 }
