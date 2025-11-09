@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 export default function AuthForm({ apiBase, onLogin }) {
-  const [mode, setMode] = useState('login'); // 'login' or 'register'
+  const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -19,12 +19,10 @@ export default function AuthForm({ apiBase, onLogin }) {
     try {
       if (mode === 'register') {
         await axios.post(`${apiBase}/auth/register`, { name, email, password });
-        setMessage('Registration successful. Logging you in...');
-        // auto-login after register
         const res = await axios.post(`${apiBase}/auth/login`, { email, password });
         const token = res.data.token;
         onLogin(token);
-        setMessage('Logged in');
+        setMessage('Registered and logged in');
       } else {
         const res = await axios.post(`${apiBase}/auth/login`, { email, password });
         const token = res.data.token;
@@ -32,7 +30,6 @@ export default function AuthForm({ apiBase, onLogin }) {
         setMessage('Logged in');
       }
     } catch (err) {
-      console.error(err);
       const errMsg = err.response?.data?.error || err.message || 'Auth failed';
       setMessage(errMsg);
     }
