@@ -2,89 +2,124 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Home from './pages/Home.js';
 import Main from './pages/Main.js';
+import AdminDashboard from './pages/AdminDashboard.js';
 import './index.css';
 
-// single source of API base
-export const API =
-  process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
+// Single source of API base (adjust if needed)
+export const API = process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
 
 function App() {
-  // token state is the source of truth for auth in memory;
-  // localStorage is used for persistence across reloads
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [token, setTokenState] = useState(localStorage.getItem('token') || '');
   const [currentUser, setCurrentUser] = useState(null);
+  const [restored, setRestored] = useState(false); // ensures routing waits for token restore
   const navigate = useNavigate();
 
-  // whenever token changes, update localStorage and decode minimal info
-  useEffect(() => {
-    if (!token) {
-      setCurrentUser(null);
-      localStorage.removeItem('token');
-      return;
-    }
-
-    localStorage.setItem('token', token);
-
-    // best-effort decode of JWT payload for UI (no validation here)
-    try {
-      const parts = token.split('.');
-      if (parts.length === 3) {
-        const payload = JSON.parse(atob(parts[1]));
-        setCurrentUser({
-          id: payload.sub,
-          role: payload.role,
-          email: payload.email ?? null,
-        });
-      } else {
-        setCurrentUser(null);
-      }
-    } catch {
-      setCurrentUser(null);
-    }
-  }, [token]);
-
-  // call this when login succeeds (e.g. AuthForm will call onLogin(token))
-  const handleLogin = newToken => {
-    setToken(newToken);
-    // after login we redirect to the protected app area
-    navigate('/app', { replace: true });
+  // --- Helper: persist token ---
+  const setToken = (t) => {
+    setTokenState(t || '');
+    if (t) localStorage.setItem('token', t);
+    else localStorage.removeItem('token');
   };
 
-  // logout clears token and returns to home
+  // --- Helper: decode JWT payload safely ---
+  const decodeToken = (t) => {
+    try {
+      const parts = t.split('.');
+      if (parts.length === 3) {
+        const payload = JSON.parse(atob(parts[1]));
+        return {
+          id: payload.id || payload.sub,
+          role: payload.role,
+          email: payload.email ?? null,
+          name: payload.name ?? null,
+        };
+      }
+    } catch {
+      // ignore decoding errors
+    }
+    return null;
+  };
+
+  // --- Restore token and user on first load ---
+  useEffect(() => {
+    const t = localStorage.getItem('token');
+    if (t) {
+      setTokenState(t);
+      const decoded = decodeToken(t);
+      if (decoded) setCurrentUser(decoded);
+    }
+    setRestored(true);
+  }, []);
+
+  // --- Handle Login ---
+  const handleLogin = (newToken, user = null) => {
+    setToken(newToken);
+    const decodedUser = user || decodeToken(newToken);
+    setCurrentUser(decodedUser);
+    navigate(decodedUser?.role === 'admin' ? '/admin' : '/app', { replace: true });
+  };
+
+  // --- Handle Logout ---
   const handleLogout = () => {
-    setToken('');
+    setToken(null);
     setCurrentUser(null);
-    localStorage.removeItem('token');
     navigate('/', { replace: true });
   };
 
-  // simple auth check used inline in routes
-  const isAuthenticated = Boolean(token || localStorage.getItem('token'));
+  // --- Derived states ---
+  const isAuthenticated = Boolean(token);
+  const isAdmin = currentUser?.role === 'admin';
 
+  // --- Wait for restoration before rendering ---
+  if (!restored) {
+    return <div className="text-center mt-10 text-gray-500">Loading...</div>;
+  }
+
+  // --- Routing ---
   return (
     <Routes>
+      {/* Public Route */}
       <Route path="/" element={<Home onLogin={handleLogin} />} />
 
-      {/* Inline protection: if not authenticated, redirect to / */}
+      {/* Admin Route */}
+      <Route
+        path="/admin/*"
+        element={
+          isAuthenticated && isAdmin ? (
+            <AdminDashboard token={token} currentUser={currentUser} />
+          ) : (
+            <Navigate to={isAuthenticated ? '/app' : '/'} replace />
+          )
+        }
+      />
+
+      {/* User Route */}
       <Route
         path="/app/*"
         element={
           isAuthenticated ? (
-            <Main
-              token={token}
-              onLogout={handleLogout}
-              currentUser={currentUser}
-            />
+            <Main token={token} onLogout={handleLogout} currentUser={currentUser} />
           ) : (
             <Navigate to="/" replace />
           )
         }
       />
 
-      {/* fallback */}
+      {/* Fallback Route */}
       <Route
         path="*"
-        element={<Navigate to={isAuthenticated ? '/app' : '/'} replace />}
+        element={
+          <Navigate
+            to={
+              isAuthenticated
+                ? isAdmin
+                  ? '/admin'
+                  : '/app'
+                : '/'
+            }
+            replace
+          />
+        }
       />
     </Routes>
   );
