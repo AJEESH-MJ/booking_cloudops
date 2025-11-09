@@ -12,7 +12,7 @@ import { API } from '../App.js';
 */
 export default function AvailabilityPanel({
   selectedNet,
-  slotInterval = 30,
+  slotInterval = 60,
   businessStart = '06:00',
   businessEnd = '22:00',
 }) {

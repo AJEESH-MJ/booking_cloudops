@@ -4,10 +4,13 @@ import availCtrl from '../controllers/availability.controller.js';
 import bookingsCtrl from '../controllers/bookings.controller.js';
 import authMiddleware from '../middleware/auth.middleware.js';
 import authRoutes from './auth.routes.js';
+import adminRoutes from './admin.routes.js';
 
 const router = express.Router();
 
 router.use('/auth', authRoutes);
+router.use('/admin', adminRoutes);
+
 
 router.get('/nets', netsCtrl.listNets);
 router.post('/nets', authMiddleware.requireAdmin, netsCtrl.createNet);

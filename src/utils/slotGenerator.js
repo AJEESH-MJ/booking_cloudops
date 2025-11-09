@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Net from '../models/net.model.js';
+import Net from '../models/nets.model.js';
 import Slot from '../models/slot.model.js';
 
 const SLOT_DAYS_AHEAD = parseInt(process.env.SLOT_DAYS_AHEAD || '30', 10);
