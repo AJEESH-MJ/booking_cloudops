@@ -11,21 +11,12 @@ const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/admin', adminRoutes);
 
-
 router.get('/nets', netsCtrl.listNets);
 router.post('/nets', authMiddleware.requireAdmin, netsCtrl.createNet);
 
 router.get('/availability', availCtrl.availability);
 
-router.post(
-  '/bookings',
-  authMiddleware.requireAuth,
-  bookingsCtrl.createBooking
-);
-router.get(
-  '/bookings/me',
-  authMiddleware.requireAuth,
-  bookingsCtrl.listMyBookings
-);
+router.post('/bookings', authMiddleware.requireAuth, bookingsCtrl.createBooking);
+router.get('/bookings/me', authMiddleware.requireAuth, bookingsCtrl.listMyBookings);
 
 export default router;

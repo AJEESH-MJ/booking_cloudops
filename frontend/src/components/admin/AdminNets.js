@@ -6,11 +6,11 @@ export default function AdminNets() {
   const [form, setForm] = useState({ name:'', location:'', capacity:1 });
 
   useEffect(() => { load(); }, []);
-  const load = () => api.get('/api/nets').then(r => setNets(r.data)).catch(console.error);
+  const load = () => api.get('/nets').then(r => setNets(r.data)).catch(console.error);
 
   async function createNet(e) {
     e.preventDefault();
-    await api.post('/api/nets', form);
+    await api.post('/nets', form);
     setForm({ name:'', location:'', capacity:1 });
     load();
   }

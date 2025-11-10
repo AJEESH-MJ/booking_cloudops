@@ -4,7 +4,7 @@ import api from '../../utils/api.js';
 export default function AdminSlots() {
   const [nets, setNets] = useState([]);
   const [form, setForm] = useState({ netId:'', date:'', startTime:'06:00', endTime:'07:00', intervalMinutes:30 });
-  useEffect(() => { api.get('/api/nets').then(r => setNets(r.data)).catch(console.error); }, []);
+  useEffect(() => { api.get('/nets').then(r => setNets(r.data)).catch(console.error); }, []);
 
   async function submit(e) {
     e.preventDefault();

@@ -1,4 +1,3 @@
-// frontend/src/pages/AdminDashboard.js
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import AdminHome from '../components/admin/AdminHome.js';
