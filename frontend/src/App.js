@@ -82,16 +82,22 @@ function App() {
       <Route path="/" element={<Home onLogin={handleLogin} />} />
 
       {/* Admin Route */}
-      <Route
-        path="/admin/*"
-        element={
-          isAuthenticated && isAdmin ? (
-            <AdminDashboard token={token} currentUser={currentUser} />
-          ) : (
-            <Navigate to={isAuthenticated ? '/app' : '/'} replace />
-          )
-        }
+      // inside frontend/src/App.js Routes area
+<Route
+  path="/admin/*"
+  element={
+    isAuthenticated && isAdmin ? (
+      <AdminDashboard
+        token={token}
+        currentUser={currentUser}
+        onLogout={handleLogout}  
       />
+    ) : (
+      <Navigate to={isAuthenticated ? '/app' : '/'} replace />
+    )
+  }
+/>
+
 
       {/* User Route */}
       <Route
