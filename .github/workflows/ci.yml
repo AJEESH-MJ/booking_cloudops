@@ -5,4 +5,50 @@ on:
     branches: [main]
 
 jobs:
-  mongo-init
+  test:
+    runs-on: ubuntu-latest
+
+    env: 
+      PORT: ${{ secrets.PORT }}
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      SLOT_DAYS_AHEAD: ${{ secrets.SLOT_DAYS_AHEAD }}
+      SLOT_INTERVAL_MINUTES: ${{ secrets.SLOT_INTERVAL_MINUTES }}
+      BUSINESS_START: ${{ secrets.BUSINESS_START }}
+      BUSINESS_END: ${{ secrets.BUSINESS_END }}
+
+    services:
+      mongo:
+        image: mongo:6
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Wait for MongoDB
+        run: |
+          echo "Waiting for MongoDB to be ready..."
+          until nc -zv localhost 27017; do
+            echo "MongoDB not ready yet..."
+            sleep 2
+          done
+          echo "MongoDB is up!"
+
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Seed MongoDB
+        working-directory: ./backend
+        run: node scripts/seed.js
+
+      - name: Run Backend Tests
+        working-directory: ./backend
+        run: npm test
