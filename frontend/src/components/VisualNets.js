@@ -1,5 +1,5 @@
-import React from "react";
-import { GiCricketBat } from "react-icons/gi";
+import React from 'react';
+import { GiCricketBat } from 'react-icons/gi';
 
 export default function VisualNets({ nets = [], selected, onSelect }) {
   return (
@@ -12,7 +12,7 @@ export default function VisualNets({ nets = [], selected, onSelect }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {nets.map((n) => {
+        {nets.map(n => {
           const isSel = selected && selected._id === n._id;
           return (
             <button
@@ -20,19 +20,19 @@ export default function VisualNets({ nets = [], selected, onSelect }) {
               onClick={() => onSelect(n)}
               className={`p-4 rounded-2xl border border-white/20 backdrop-blur-md transition-all duration-200 shadow-lg hover:scale-[1.02] ${
                 isSel
-                  ? "bg-gradient-to-r from-indigo-600 to-cyan-500 text-white shadow-cyan-500/30"
-                  : "bg-white/10 text-gray-200 hover:shadow-indigo-500/20"
+                  ? 'bg-gradient-to-r from-indigo-600 to-cyan-500 text-white shadow-cyan-500/30'
+                  : 'bg-white/10 text-gray-200 hover:shadow-indigo-500/20'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-semibold text-lg">{n.name}</div>
                   <div className="text-sm text-gray-300">
-                    {n.location || "Main ground"}
+                    {n.location || 'Main ground'}
                   </div>
                 </div>
                 <div className="text-xs bg-white/20 px-2 py-1 rounded-full">
-                  {n.capacity > 1 ? `${n.capacity} pax` : "1 pax"}
+                  {n.capacity > 1 ? `${n.capacity} pax` : '1 pax'}
                 </div>
               </div>
             </button>

@@ -5,24 +5,22 @@ import Main from './pages/Main.js';
 import AdminDashboard from './pages/AdminDashboard.js';
 import './index.css';
 
-// Single source of API base (adjust if needed)
-export const API = process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
+export const API =
+  process.env.REACT_APP_API_BASE || 'http://localhost:8080/api';
 
 function App() {
   const [token, setTokenState] = useState(localStorage.getItem('token') || '');
   const [currentUser, setCurrentUser] = useState(null);
-  const [restored, setRestored] = useState(false); // ensures routing waits for token restore
+  const [restored, setRestored] = useState(false);
   const navigate = useNavigate();
 
-  // --- Helper: persist token ---
-  const setToken = (t) => {
+  const setToken = t => {
     setTokenState(t || '');
     if (t) localStorage.setItem('token', t);
     else localStorage.removeItem('token');
   };
 
-  // --- Helper: decode JWT payload safely ---
-  const decodeToken = (t) => {
+  const decodeToken = t => {
     try {
       const parts = t.split('.');
       if (parts.length === 3) {
@@ -34,13 +32,10 @@ function App() {
           name: payload.name ?? null,
         };
       }
-    } catch {
-      // ignore decoding errors
-    }
+    } catch {}
     return null;
   };
 
-  // --- Restore token and user on first load ---
   useEffect(() => {
     const t = localStorage.getItem('token');
     if (t) {
@@ -56,7 +51,9 @@ function App() {
     setToken(newToken);
     const decodedUser = user || decodeToken(newToken);
     setCurrentUser(decodedUser);
-    navigate(decodedUser?.role === 'admin' ? '/admin' : '/app', { replace: true });
+    navigate(decodedUser?.role === 'admin' ? '/admin' : '/app', {
+      replace: true,
+    });
   };
 
   // --- Handle Logout ---
@@ -70,7 +67,6 @@ function App() {
   const isAuthenticated = Boolean(token);
   const isAdmin = currentUser?.role === 'admin';
 
-  // --- Wait for restoration before rendering ---
   if (!restored) {
     return <div className="text-center mt-10 text-gray-500">Loading...</div>;
   }
@@ -80,49 +76,42 @@ function App() {
     <Routes>
       {/* Public Route */}
       <Route path="/" element={<Home onLogin={handleLogin} />} />
-
       {/* Admin Route */}
-      // inside frontend/src/App.js Routes area
-<Route
-  path="/admin/*"
-  element={
-    isAuthenticated && isAdmin ? (
-      <AdminDashboard
-        token={token}
-        currentUser={currentUser}
-        onLogout={handleLogout}  
+      <Route
+        path="/admin/*"
+        element={
+          isAuthenticated && isAdmin ? (
+            <AdminDashboard
+              token={token}
+              currentUser={currentUser}
+              onLogout={handleLogout}
+            />
+          ) : (
+            <Navigate to={isAuthenticated ? '/app' : '/'} replace />
+          )
+        }
       />
-    ) : (
-      <Navigate to={isAuthenticated ? '/app' : '/'} replace />
-    )
-  }
-/>
-
-
       {/* User Route */}
       <Route
         path="/app/*"
         element={
           isAuthenticated ? (
-            <Main token={token} onLogout={handleLogout} currentUser={currentUser} />
+            <Main
+              token={token}
+              onLogout={handleLogout}
+              currentUser={currentUser}
+            />
           ) : (
             <Navigate to="/" replace />
           )
         }
       />
-
       {/* Fallback Route */}
       <Route
         path="*"
         element={
           <Navigate
-            to={
-              isAuthenticated
-                ? isAdmin
-                  ? '/admin'
-                  : '/app'
-                : '/'
-            }
+            to={isAuthenticated ? (isAdmin ? '/admin' : '/app') : '/'}
             replace
           />
         }

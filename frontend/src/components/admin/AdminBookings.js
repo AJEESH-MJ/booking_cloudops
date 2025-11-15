@@ -3,7 +3,13 @@ import api from '../../utils/api.js';
 
 function IconTrash(props) {
   return (
-    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      {...props}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <path d="M3 6h18" />
       <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" />
       <path d="M10 11v6" />
@@ -21,8 +27,15 @@ function ConfirmModal({ open, title, description, onConfirm, onCancel }) {
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
         <p className="text-sm text-gray-600 mb-4">{description}</p>
         <div className="flex justify-end gap-3">
-          <button onClick={onCancel} className="px-3 py-2 rounded border">Cancel</button>
-          <button onClick={onConfirm} className="px-3 py-2 rounded bg-red-600 text-white">Delete</button>
+          <button onClick={onCancel} className="px-3 py-2 rounded border">
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-3 py-2 rounded bg-red-600 text-white"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -51,13 +64,16 @@ export default function AdminBookings() {
     try {
       const [r1, r2] = await Promise.all([
         api.get('/admin/bookings'),
-        api.get('/nets')
+        api.get('/nets'),
       ]);
       setBookings(r1.data || []);
       setNets(r2.data || []);
     } catch (err) {
       console.error('load', err);
-      alert('Failed to load bookings or nets: ' + (err.response?.data?.error || err.message));
+      alert(
+        'Failed to load bookings or nets: ' +
+          (err.response?.data?.error || err.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -68,7 +84,8 @@ export default function AdminBookings() {
     let list = bookings;
     if (term) {
       list = list.filter(b => {
-        const text = `${b.user?.email || ''} ${b.net?.name || ''}`.toLowerCase();
+        const text =
+          `${b.user?.email || ''} ${b.net?.name || ''}`.toLowerCase();
         return text.includes(term);
       });
     }
@@ -76,7 +93,9 @@ export default function AdminBookings() {
       list = list.filter(b => (b.net?._id || b.net) === filterNet);
     }
     if (filterDate) {
-      list = list.filter(b => new Date(b.startAt).toISOString().slice(0, 10) === filterDate);
+      list = list.filter(
+        b => new Date(b.startAt).toISOString().slice(0, 10) === filterDate
+      );
     }
     return list.sort((a, b) => new Date(b.startAt) - new Date(a.startAt));
   }, [bookings, q, filterNet, filterDate]);
@@ -112,24 +131,46 @@ export default function AdminBookings() {
           <input
             placeholder="Search by user or net"
             value={q}
-            onChange={(e) => { setQ(e.target.value); setPage(1); }}
+            onChange={e => {
+              setQ(e.target.value);
+              setPage(1);
+            }}
             className="px-3 py-2 border rounded w-64 focus:outline-none focus:ring"
           />
           <select
             value={filterNet}
-            onChange={(e) => { setFilterNet(e.target.value); setPage(1); }}
+            onChange={e => {
+              setFilterNet(e.target.value);
+              setPage(1);
+            }}
             className="px-3 py-2 border rounded"
           >
             <option value="">All nets</option>
-            {nets.map(n => <option key={n._id} value={n._id}>{n.name}</option>)}
+            {nets.map(n => (
+              <option key={n._id} value={n._id}>
+                {n.name}
+              </option>
+            ))}
           </select>
           <input
             type="date"
             value={filterDate}
-            onChange={(e) => { setFilterDate(e.target.value); setPage(1); }}
+            onChange={e => {
+              setFilterDate(e.target.value);
+              setPage(1);
+            }}
             className="px-3 py-2 border rounded"
           />
-          <button onClick={() => { setQ(''); setFilterNet(''); setFilterDate(''); }} className="px-3 py-2 border rounded">Clear</button>
+          <button
+            onClick={() => {
+              setQ('');
+              setFilterNet('');
+              setFilterDate('');
+            }}
+            className="px-3 py-2 border rounded"
+          >
+            Clear
+          </button>
         </div>
       </div>
 
@@ -140,8 +181,12 @@ export default function AdminBookings() {
               <tr>
                 <th className="px-4 py-3 text-sm text-gray-600">When</th>
                 <th className="px-4 py-3 text-sm text-gray-600">Net</th>
-                <th className="px-4 py-3 text-sm text-gray-600 hidden sm:table-cell">User</th>
-                <th className="px-4 py-3 text-sm text-gray-600 text-right">Actions</th>
+                <th className="px-4 py-3 text-sm text-gray-600 hidden sm:table-cell">
+                  User
+                </th>
+                <th className="px-4 py-3 text-sm text-gray-600 text-right">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -149,25 +194,44 @@ export default function AdminBookings() {
               {loading ? (
                 Array.from({ length: perPage }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-4 py-4"><div className="h-4 bg-gray-200 rounded w-40" /></td>
-                    <td className="px-4 py-4"><div className="h-4 bg-gray-200 rounded w-32" /></td>
-                    <td className="px-4 py-4 hidden sm:table-cell"><div className="h-4 bg-gray-200 rounded w-48" /></td>
-                    <td className="px-4 py-4 text-right"><div className="h-8 bg-gray-200 rounded w-20 inline-block" /></td>
+                    <td className="px-4 py-4">
+                      <div className="h-4 bg-gray-200 rounded w-40" />
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="h-4 bg-gray-200 rounded w-32" />
+                    </td>
+                    <td className="px-4 py-4 hidden sm:table-cell">
+                      <div className="h-4 bg-gray-200 rounded w-48" />
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="h-8 bg-gray-200 rounded w-20 inline-block" />
+                    </td>
                   </tr>
                 ))
               ) : visible.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="px-4 py-6 text-center text-gray-500">No bookings yet.</td>
+                  <td
+                    colSpan="4"
+                    className="px-4 py-6 text-center text-gray-500"
+                  >
+                    No bookings yet.
+                  </td>
                 </tr>
               ) : (
                 visible.map(b => (
                   <tr key={b._id} className="hover:bg-gray-50">
                     <td className="px-4 py-4">
-                      <div className="font-medium">{new Date(b.startAt).toLocaleString()}</div>
-                      <div className="text-xs text-gray-400">{new Date(b.endAt).toLocaleTimeString()}</div>
+                      <div className="font-medium">
+                        {new Date(b.startAt).toLocaleString()}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {new Date(b.endAt).toLocaleTimeString()}
+                      </div>
                     </td>
                     <td className="px-4 py-4">{b.net?.name ?? 'Net'}</td>
-                    <td className="px-4 py-4 hidden sm:table-cell">{b.user?.email ?? '—'}</td>
+                    <td className="px-4 py-4 hidden sm:table-cell">
+                      {b.user?.email ?? '—'}
+                    </td>
                     <td className="px-4 py-4 text-right">
                       <button
                         onClick={() => handleDelete(b._id)}
@@ -186,12 +250,27 @@ export default function AdminBookings() {
         </div>
 
         <div className="px-4 py-3 flex items-center justify-between">
-          <div className="text-sm text-gray-600">Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}–{Math.min(page * perPage, filtered.length)} of {filtered.length}</div>
+          <div className="text-sm text-gray-600">
+            Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}–
+            {Math.min(page * perPage, filtered.length)} of {filtered.length}
+          </div>
 
           <div className="flex items-center gap-2">
-            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 border rounded">Prev</button>
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1 border rounded"
+            >
+              Prev
+            </button>
             <div className="px-3 py-1 border rounded bg-gray-50">{page}</div>
-            <button onClick={() => setPage(p => Math.min(pages, p + 1))} disabled={page === pages} className="px-3 py-1 border rounded">Next</button>
+            <button
+              onClick={() => setPage(p => Math.min(pages, p + 1))}
+              disabled={page === pages}
+              className="px-3 py-1 border rounded"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
@@ -200,7 +279,9 @@ export default function AdminBookings() {
         open={!!toDelete}
         title="Delete booking"
         description={`Delete selected booking? This action cannot be undone.`}
-        onConfirm={() => { /* placeholder */ }}
+        onConfirm={() => {
+          /* placeholder */
+        }}
         onCancel={() => setToDelete(null)}
       />
     </div>

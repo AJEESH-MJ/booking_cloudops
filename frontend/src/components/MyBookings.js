@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function MyBookings({ token, apiBase }) {
   const [list, setList] = useState([]);
@@ -10,7 +10,7 @@ export default function MyBookings({ token, apiBase }) {
       .get(`${apiBase}/bookings/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((r) => setList(r.data))
+      .then(r => setList(r.data))
       .catch(console.error);
   }, [token]);
 
@@ -24,7 +24,7 @@ export default function MyBookings({ token, apiBase }) {
         <p className="text-sm text-gray-400">No bookings yet.</p>
       ) : (
         <div className="space-y-3">
-          {list.map((b) => (
+          {list.map(b => (
             <div
               key={b._id}
               className="bg-white/10 border border-white/20 rounded-xl p-4 hover:shadow-cyan-500/20 transition"
@@ -34,7 +34,7 @@ export default function MyBookings({ token, apiBase }) {
                 {new Date(b.startAt).toLocaleString()}
               </div>
               <div className="text-sm mt-1">
-                Status:{" "}
+                Status:{' '}
                 <span className="font-medium text-cyan-300">{b.status}</span>
               </div>
             </div>

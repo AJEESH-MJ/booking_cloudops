@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 export default function BookingForm({ net, token, apiBase }) {
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState('');
   const [duration, setDuration] = useState(60);
   const [options, setOptions] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   if (!net)
-    return (
-      <div className="text-gray-300 text-sm">Select a net to book.</div>
-    );
+    return <div className="text-gray-300 text-sm">Select a net to book.</div>;
 
   const checkAvailability = async () => {
     try {
@@ -19,28 +17,28 @@ export default function BookingForm({ net, token, apiBase }) {
       });
       setOptions(res.data);
     } catch {
-      setMessage("Error fetching availability");
+      setMessage('Error fetching availability');
     }
   };
 
-  const book = async (opt) => {
+  const book = async opt => {
     try {
       const formattedDate = new Date(date).toLocaleDateString('en-GB'); // converts to DD/MM/YYYY
-const finalDate = formattedDate.replaceAll('/', '-'); // converts to DD-MM-YYYY
+      const finalDate = formattedDate.replaceAll('/', '-'); // converts to DD-MM-YYYY
 
-const payload = {
-  netId: opt.net,
-  date: finalDate,
-  startAt: opt.startAt,
-  endAt: opt.endAt,
-  durationMinutes: duration,
-};
+      const payload = {
+        netId: opt.net,
+        date: finalDate,
+        startAt: opt.startAt,
+        endAt: opt.endAt,
+        durationMinutes: duration,
+      };
 
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       await axios.post(`${apiBase}/bookings`, payload, { headers });
-      setMessage("✅ Booking confirmed!");
+      setMessage('✅ Booking confirmed!');
     } catch {
-      setMessage("❌ Booking failed");
+      setMessage('❌ Booking failed');
     }
   };
 
@@ -52,12 +50,12 @@ const payload = {
           className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-cyan-400"
           type="date"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={e => setDate(e.target.value)}
         />
         <select
           className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white"
           value={duration}
-          onChange={(e) => setDuration(Number(e.target.value))}
+          onChange={e => setDuration(Number(e.target.value))}
         >
           <option value={30}>30 min</option>
           <option value={60}>60 min</option>

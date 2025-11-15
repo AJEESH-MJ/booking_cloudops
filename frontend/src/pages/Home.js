@@ -9,11 +9,14 @@ function Toast({ text, onClose }) {
     <div className="fixed right-6 bottom-6 z-50">
       <div className="bg-black/90 text-white px-4 py-2 rounded shadow-md flex items-center gap-3">
         <div className="text-sm">{text}</div>
-        <button onClick={onClose} className="text-xs opacity-80 hover:opacity-100">
+        <button
+          onClick={onClose}
+          className="text-xs opacity-80 hover:opacity-100"
+        >
           Close
         </button>
       </div>
-    </div>    
+    </div>
   );
 }
 
@@ -22,37 +25,40 @@ export default function Home({ onLogin }) {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
-  const [regForm, setRegForm] = useState({ name: '', email: '', password: '', confirm: '' });
+  const [regForm, setRegForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirm: '',
+  });
 
   const navigate = useNavigate();
 
   async function handleLogin({ email, password }) {
-  if (!email || !password) return setToast('Please enter email and password');
-  setLoading(true);
-  try {
-    const res = await api.post('/auth/login', { email, password });
-    const token = res.data?.token || res.data;
-    const user = res.data?.user || res.data?.userInfo || null;
-    if (!token) return setToast('Login failed (no token returned)');
+    if (!email || !password) return setToast('Please enter email and password');
+    setLoading(true);
+    try {
+      const res = await api.post('/auth/login', { email, password });
+      const token = res.data?.token || res.data;
+      const user = res.data?.user || res.data?.userInfo || null;
+      if (!token) return setToast('Login failed (no token returned)');
 
-    onLogin(token, user);
-    setToast('Login successful');
+      onLogin(token, user);
+      setToast('Login successful');
 
-    // redirect based on user role
-    if (user?.role === 'admin') {
-      navigate('/admin', { replace: true });
-    } else {
-      navigate('/app', { replace: true });
+      // redirect based on user role
+      if (user?.role === 'admin') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/app', { replace: true });
+      }
+    } catch (err) {
+      console.error('login', err);
+      setToast(err.response?.data?.error || err.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
-
-  } catch (err) {
-    console.error('login', err);
-    setToast(err.response?.data?.error || err.message || 'Login failed');
-  } finally {
-    setLoading(false);
   }
-}
-
 
   async function handleRegister({ name, email, password, confirm }) {
     if (!name || !email || !password) return setToast('Please fill all fields');
@@ -71,7 +77,9 @@ export default function Home({ onLogin }) {
       }
     } catch (err) {
       console.error('register', err);
-      setToast(err.response?.data?.error || err.message || 'Registration failed');
+      setToast(
+        err.response?.data?.error || err.message || 'Registration failed'
+      );
     } finally {
       setLoading(false);
     }
@@ -86,18 +94,25 @@ export default function Home({ onLogin }) {
               <div className="text-2xl font-bold tracking-tight">
                 Cricket<span className="text-purple-300">Academy</span>
               </div>
-              <div className="text-sm text-indigo-200 mt-1">Admin & Booking Dashboard</div>
+              <div className="text-sm text-indigo-200 mt-1">
+                Admin & Booking Dashboard
+              </div>
             </div>
 
             <div>
-              <h1 className="text-3xl font-extrabold leading-tight">Welcome back</h1>
+              <h1 className="text-3xl font-extrabold leading-tight">
+                Welcome back
+              </h1>
               <p className="mt-3 text-indigo-100">
-                Book nets, manage schedules, and run the academy — with a simple, elegant interface for staff and players.
+                Book nets, manage schedules, and run the academy — with a
+                simple, elegant interface for staff and players.
               </p>
             </div>
 
             <div className="bg-white/8 p-5 rounded-lg">
-              <div className="text-sm text-indigo-100 font-medium mb-2">notes</div>
+              <div className="text-sm text-indigo-100 font-medium mb-2">
+                notes
+              </div>
               <ul className="text-sm text-indigo-200 list-disc list-inside space-y-1">
                 <li>Use the admin panel to create nets and slots.</li>
                 <li>Users can book available slots from the main app.</li>

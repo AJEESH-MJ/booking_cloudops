@@ -19,7 +19,9 @@ function Toast({ message, onClose }) {
       <div className="bg-black/90 text-white px-4 py-2 rounded shadow-md">
         <div className="flex items-center gap-4">
           <div className="text-sm">{message}</div>
-          <button onClick={onClose} className="text-xs opacity-80">Close</button>
+          <button onClick={onClose} className="text-xs opacity-80">
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -45,7 +47,7 @@ export default function AdminHome() {
       const [s, b, n] = await Promise.all([
         api.get('/admin/stats'),
         api.get('/admin/bookings'),
-        api.get('/nets')
+        api.get('/nets'),
       ]);
       setStats(s.data || {});
       // show top 5 recent
@@ -70,7 +72,7 @@ export default function AdminHome() {
         for (let i = 0; i < daysToRegenerate; i++) {
           const d = new Date(today);
           d.setDate(today.getDate() + i);
-          const dateStr = d.toISOString().slice(0,10);
+          const dateStr = d.toISOString().slice(0, 10);
           // using default times from environment or fallback
           const startTime = process.env.REACT_APP_DEFAULT_START || '06:00';
           const endTime = process.env.REACT_APP_DEFAULT_END || '22:00';
@@ -80,15 +82,19 @@ export default function AdminHome() {
             date: dateStr,
             startTime,
             endTime,
-            intervalMinutes: interval
+            intervalMinutes: interval,
           });
-          totalCreated += (res.data?.created?.length ?? 0);
+          totalCreated += res.data?.created?.length ?? 0;
         }
       }
-      setToast(`Regenerated ${totalCreated} slots for ${daysToRegenerate} days across ${nets.length} nets`);
+      setToast(
+        `Regenerated ${totalCreated} slots for ${daysToRegenerate} days across ${nets.length} nets`
+      );
     } catch (err) {
       console.error('regenerate all', err);
-      setToast('Regenerate failed: ' + (err.response?.data?.error || err.message));
+      setToast(
+        'Regenerate failed: ' + (err.response?.data?.error || err.message)
+      );
     } finally {
       setRegenerating(false);
     }
@@ -97,25 +103,54 @@ export default function AdminHome() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total bookings" value={loadingStats ? '—' : stats?.totalBookings ?? 0} hint="All-time bookings" />
-        <StatCard title="Bookings today" value={loadingStats ? '—' : stats?.bookingsToday ?? 0} hint="Bookings made for today" />
-        <StatCard title="Active nets" value={loadingStats ? '—' : stats?.activeNets ?? 0} hint="Nets currently enabled" />
+        <StatCard
+          title="Total bookings"
+          value={loadingStats ? '—' : (stats?.totalBookings ?? 0)}
+          hint="All-time bookings"
+        />
+        <StatCard
+          title="Bookings today"
+          value={loadingStats ? '—' : (stats?.bookingsToday ?? 0)}
+          hint="Bookings made for today"
+        />
+        <StatCard
+          title="Active nets"
+          value={loadingStats ? '—' : (stats?.activeNets ?? 0)}
+          hint="Nets currently enabled"
+        />
       </div>
 
       <div className="bg-white border rounded p-4">
         <h3 className="text-lg font-medium mb-3">Quick actions</h3>
         <div className="flex flex-col md:flex-row md:items-center gap-3">
           <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600 mr-2">Regenerate next</label>
-            <input type="number" min="1" max="90" value={daysToRegenerate} onChange={e => setDaysToRegenerate(Number(e.target.value))} className="w-20 border rounded px-2 py-1" />
-            <span className="text-sm text-gray-500 ml-2">days for all nets</span>
+            <label className="text-sm text-gray-600 mr-2">
+              Regenerate next
+            </label>
+            <input
+              type="number"
+              min="1"
+              max="90"
+              value={daysToRegenerate}
+              onChange={e => setDaysToRegenerate(Number(e.target.value))}
+              className="w-20 border rounded px-2 py-1"
+            />
+            <span className="text-sm text-gray-500 ml-2">
+              days for all nets
+            </span>
           </div>
 
           <div className="ml-auto flex gap-2">
-            <button onClick={regenerateForAllNets} disabled={regenerating} className="px-4 py-2 bg-indigo-600 text-white rounded">
+            <button
+              onClick={regenerateForAllNets}
+              disabled={regenerating}
+              className="px-4 py-2 bg-indigo-600 text-white rounded"
+            >
               {regenerating ? 'Regenerating...' : 'Regenerate for all nets'}
             </button>
-            <button onClick={loadAll} className="px-4 py-2 border rounded">Refresh</button>
+            <button onClick={loadAll} className="px-4 py-2 border rounded">
+              Refresh
+            </button>
           </div>
         </div>
       </div>
@@ -127,12 +162,20 @@ export default function AdminHome() {
         ) : (
           <div className="grid gap-2">
             {recentBookings.map(b => (
-              <div key={b._id} className="p-3 border rounded flex justify-between items-center">
+              <div
+                key={b._id}
+                className="p-3 border rounded flex justify-between items-center"
+              >
                 <div>
                   <div className="font-medium">{b.net?.name ?? 'Net'}</div>
-                  <div className="text-sm text-gray-500">{new Date(b.startAt).toLocaleString()} — {b.user?.email ?? 'user'}</div>
+                  <div className="text-sm text-gray-500">
+                    {new Date(b.startAt).toLocaleString()} —{' '}
+                    {b.user?.email ?? 'user'}
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600">{b.booked ? 'Booked' : 'Reserved'}</div>
+                <div className="text-sm text-gray-600">
+                  {b.booked ? 'Booked' : 'Reserved'}
+                </div>
               </div>
             ))}
           </div>

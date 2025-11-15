@@ -9,7 +9,9 @@ function Toast({ message, onClose }) {
     <div className="fixed right-6 bottom-6 z-50">
       <div className="bg-black/90 text-white px-4 py-2 rounded shadow-md flex items-center gap-4">
         <div className="text-sm">{message}</div>
-        <button onClick={onClose} className="text-xs opacity-80">Close</button>
+        <button onClick={onClose} className="text-xs opacity-80">
+          Close
+        </button>
       </div>
     </div>
   );
@@ -18,7 +20,13 @@ function Toast({ message, onClose }) {
 /* small icons */
 function IconClock() {
   return (
-    <svg className="w-4 h-4 inline-block mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      className="w-4 h-4 inline-block mr-1"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <circle cx="12" cy="12" r="9" />
       <path d="M12 7v6l4 2" />
     </svg>
@@ -26,14 +34,26 @@ function IconClock() {
 }
 function IconPlus() {
   return (
-    <svg className="w-4 h-4 inline-block mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      className="w-4 h-4 inline-block mr-1"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <path d="M12 5v14M5 12h14" />
     </svg>
   );
 }
 function IconTrash() {
   return (
-    <svg className="w-4 h-4 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      className="w-4 h-4 inline-block"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <path d="M3 6h18" />
       <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" />
       <path d="M10 11v6" />
@@ -71,11 +91,21 @@ export default function AdminSlots() {
   useEffect(() => {
     let mounted = true;
     setLoadingNets(true);
-    api.get('/nets')
-      .then(r => { if (mounted) setNets(r.data || []); })
-      .catch(e => { console.error('load nets', e); setToast('Failed to load nets'); })
-      .finally(() => { if (mounted) setLoadingNets(false); });
-    return () => { mounted = false; };
+    api
+      .get('/nets')
+      .then(r => {
+        if (mounted) setNets(r.data || []);
+      })
+      .catch(e => {
+        console.error('load nets', e);
+        setToast('Failed to load nets');
+      })
+      .finally(() => {
+        if (mounted) setLoadingNets(false);
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // load availability for selected net and date
@@ -86,7 +116,9 @@ export default function AdminSlots() {
     }
     setLoadingAvail(true);
     try {
-      const res = await api.get('/availability', { params: { date: form.date, netIds: form.netId } });
+      const res = await api.get('/availability', {
+        params: { date: form.date, netIds: form.netId },
+      });
       setAvailSlots(res.data || []);
     } catch (err) {
       console.error('load availability', err);
@@ -117,7 +149,9 @@ export default function AdminSlots() {
       await loadAvailability();
     } catch (err) {
       console.error('create slots', err);
-      setToast(err.response?.data?.error || err.message || 'Failed to create slots');
+      setToast(
+        err.response?.data?.error || err.message || 'Failed to create slots'
+      );
     } finally {
       setCreating(false);
     }
@@ -139,7 +173,9 @@ export default function AdminSlots() {
       if (err.response?.status === 404) {
         setToast('Delete endpoint not implemented on server');
       } else {
-        setToast(err.response?.data?.error || err.message || 'Failed to delete slot');
+        setToast(
+          err.response?.data?.error || err.message || 'Failed to delete slot'
+        );
       }
     } finally {
       setDeleting(false);
@@ -162,28 +198,43 @@ export default function AdminSlots() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold">Slot Booking</h2>
-          <div className="text-sm text-gray-500">Create and manage slots for a selected net and date.</div>
+          <div className="text-sm text-gray-500">
+            Create and manage slots for a selected net and date.
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="text-sm text-gray-600">Selected Net:</div>
-          <div className="font-medium">{nets.find(n => n._id === form.netId)?.name || '—'}</div>
+          <div className="font-medium">
+            {nets.find(n => n._id === form.netId)?.name || '—'}
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Form */}
-        <form onSubmit={handleCreateSlots} className="bg-white border rounded p-4 space-y-4">
+        <form
+          onSubmit={handleCreateSlots}
+          className="bg-white border rounded p-4 space-y-4"
+        >
           <div>
             <label className="block text-sm text-gray-600 mb-1">Net</label>
             <select
               className="w-full border rounded px-3 py-2"
               value={form.netId}
-              onChange={(e) => setForm({ ...form, netId: e.target.value })}
+              onChange={e => setForm({ ...form, netId: e.target.value })}
               required
             >
               <option value="">Select net</option>
-              {loadingNets ? <option>Loading...</option> : nets.map(n => <option key={n._id} value={n._id}>{n.name}</option>)}
+              {loadingNets ? (
+                <option>Loading...</option>
+              ) : (
+                nets.map(n => (
+                  <option key={n._id} value={n._id}>
+                    {n.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -194,42 +245,50 @@ export default function AdminSlots() {
                 type="date"
                 className="w-full border rounded px-3 py-2"
                 value={form.date}
-                onChange={(e) => setForm({ ...form, date: e.target.value })}
+                onChange={e => setForm({ ...form, date: e.target.value })}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Interval (min)</label>
+              <label className="block text-sm text-gray-600 mb-1">
+                Interval (min)
+              </label>
               <input
                 type="number"
                 min="5"
                 className="w-full border rounded px-3 py-2"
                 value={form.intervalMinutes}
-                onChange={(e) => setForm({ ...form, intervalMinutes: Number(e.target.value) })}
+                onChange={e =>
+                  setForm({ ...form, intervalMinutes: Number(e.target.value) })
+                }
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Start time</label>
+              <label className="block text-sm text-gray-600 mb-1">
+                Start time
+              </label>
               <input
                 type="time"
                 className="w-full border rounded px-3 py-2"
                 value={form.startTime}
-                onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                onChange={e => setForm({ ...form, startTime: e.target.value })}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-600 mb-1">End time</label>
+              <label className="block text-sm text-gray-600 mb-1">
+                End time
+              </label>
               <input
                 type="time"
                 className="w-full border rounded px-3 py-2"
                 value={form.endTime}
-                onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+                onChange={e => setForm({ ...form, endTime: e.target.value })}
                 required
               />
             </div>
@@ -252,7 +311,9 @@ export default function AdminSlots() {
               <IconClock /> Load existing
             </button>
 
-            <div className="ml-auto text-sm text-gray-500">Creates slots by upsert — duplicates ignored.</div>
+            <div className="ml-auto text-sm text-gray-500">
+              Creates slots by upsert — duplicates ignored.
+            </div>
           </div>
         </form>
 
@@ -260,7 +321,9 @@ export default function AdminSlots() {
         <div className="bg-white border rounded p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Existing slots</h3>
-            <div className="text-sm text-gray-500">{form.date || 'Pick a date'}</div>
+            <div className="text-sm text-gray-500">
+              {form.date || 'Pick a date'}
+            </div>
           </div>
 
           <div className="max-h-96 overflow-auto space-y-2">
@@ -269,13 +332,22 @@ export default function AdminSlots() {
                 <div key={i} className="animate-pulse p-3 bg-gray-50 rounded" />
               ))
             ) : availSlots.length === 0 ? (
-              <div className="text-sm text-gray-500 p-3">No slots for the selected date.</div>
+              <div className="text-sm text-gray-500 p-3">
+                No slots for the selected date.
+              </div>
             ) : (
               availSlots.map(s => (
-                <div key={s._id || (s.startAt + s.endAt)} className="p-3 bg-white rounded shadow-sm flex items-center justify-between border">
+                <div
+                  key={s._id || s.startAt + s.endAt}
+                  className="p-3 bg-white rounded shadow-sm flex items-center justify-between border"
+                >
                   <div>
-                    <div className="font-medium">{formatTime(s.startAt, s.endAt)}</div>
-                    <div className="text-xs text-gray-400">{s.booked ? 'Booked' : 'Available'}</div>
+                    <div className="font-medium">
+                      {formatTime(s.startAt, s.endAt)}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {s.booked ? 'Booked' : 'Available'}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">

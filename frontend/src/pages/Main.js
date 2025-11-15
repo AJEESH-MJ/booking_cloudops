@@ -23,17 +23,19 @@ export default function Main({ token, onLogout, currentUser }) {
 
     axios
       .get(`${API}/nets`, { headers })
-      .then((res) => {
+      .then(res => {
         if (!mounted) return;
         const list = Array.isArray(res.data) ? res.data : [];
         setNets(list);
         if (!selectedNet && list.length > 0) setSelectedNet(list[0]);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('Failed to load nets', err);
         if (!mounted) return;
         setNets([]);
-        setNetsError(err.response?.data?.error || err.message || 'Failed to load nets');
+        setNetsError(
+          err.response?.data?.error || err.message || 'Failed to load nets'
+        );
       })
       .finally(() => {
         if (!mounted) return;
@@ -45,7 +47,7 @@ export default function Main({ token, onLogout, currentUser }) {
     };
   }, [token]);
 
-  const activeNetsCount = nets.filter((n) => n.active !== false).length;
+  const activeNetsCount = nets.filter(n => n.active !== false).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-blue-900 text-white">
@@ -61,7 +63,10 @@ export default function Main({ token, onLogout, currentUser }) {
 
           <div className="flex items-center gap-4">
             <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg text-sm text-cyan-200">
-              <span className="font-semibold text-white">{activeNetsCount}</span> Active Nets
+              <span className="font-semibold text-white">
+                {activeNetsCount}
+              </span>{' '}
+              Active Nets
             </div>
             {currentUser?.role === 'admin' && (
               <Link
@@ -79,7 +84,7 @@ export default function Main({ token, onLogout, currentUser }) {
           {[
             { id: 'book', label: 'Book Nets' },
             { id: 'bookings', label: 'My Bookings' },
-          ].map((tab) => (
+          ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -101,18 +106,27 @@ export default function Main({ token, onLogout, currentUser }) {
             <aside className="lg:col-span-1">
               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-lg hover:shadow-cyan-500/20 transition-all h-full">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-cyan-300">Available Nets</h2>
-                  <div className="text-sm text-gray-300">{activeNetsCount} active</div>
+                  <h2 className="text-xl font-semibold text-cyan-300">
+                    Available Nets
+                  </h2>
+                  <div className="text-sm text-gray-300">
+                    {activeNetsCount} active
+                  </div>
                 </div>
 
                 {loadingNets ? (
                   <div className="space-y-3">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-12 bg-white/10 rounded animate-pulse" />
+                    {[1, 2, 3].map(i => (
+                      <div
+                        key={i}
+                        className="h-12 bg-white/10 rounded animate-pulse"
+                      />
                     ))}
                   </div>
                 ) : netsError ? (
-                  <div className="text-sm text-red-400">Error loading nets: {netsError}</div>
+                  <div className="text-sm text-red-400">
+                    Error loading nets: {netsError}
+                  </div>
                 ) : nets.length === 0 ? (
                   <div className="text-sm text-gray-300">
                     No nets found.
@@ -131,7 +145,7 @@ export default function Main({ token, onLogout, currentUser }) {
                   <VisualNets
                     nets={nets}
                     selected={selectedNet}
-                    onSelect={(n) => setSelectedNet(n)}
+                    onSelect={n => setSelectedNet(n)}
                   />
                 )}
               </div>
@@ -141,11 +155,14 @@ export default function Main({ token, onLogout, currentUser }) {
             <section className="lg:col-span-2 space-y-8">
               {/* Quick Help */}
               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-lg hover:shadow-cyan-500/20 transition-all">
-                <h3 className="text-xl font-semibold text-indigo-300 mb-2">Quick Help</h3>
+                <h3 className="text-xl font-semibold text-indigo-300 mb-2">
+                  Quick Help
+                </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  Select a net on the left, choose a date, and check colored slots for availability.
-                  Green slots are available, red are booked. Click a free slot to book.
-                  Admins can manage nets and slots from the management panel.
+                  Select a net on the left, choose a date, and check colored
+                  slots for availability. Green slots are available, red are
+                  booked. Click a free slot to book. Admins can manage nets and
+                  slots from the management panel.
                 </p>
               </div>
 
@@ -153,7 +170,9 @@ export default function Main({ token, onLogout, currentUser }) {
               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-lg hover:shadow-indigo-500/20 transition-all">
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-cyan-300">Availability</h2>
+                    <h2 className="text-2xl font-bold text-cyan-300">
+                      Availability
+                    </h2>
                     <p className="text-sm text-gray-300 mt-1">
                       Pick a date to view available slots for your selected net.
                     </p>
@@ -161,7 +180,10 @@ export default function Main({ token, onLogout, currentUser }) {
                   <div className="text-sm text-gray-300">
                     {selectedNet ? (
                       <>
-                        Selected: <span className="text-white font-medium">{selectedNet.name}</span>
+                        Selected:{' '}
+                        <span className="text-white font-medium">
+                          {selectedNet.name}
+                        </span>
                       </>
                     ) : (
                       'No net selected'
@@ -178,7 +200,9 @@ export default function Main({ token, onLogout, currentUser }) {
         {/* === MY BOOKINGS TAB === */}
         {activeTab === 'bookings' && (
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-lg hover:shadow-cyan-500/20 transition-all">
-            <h2 className="text-2xl font-semibold text-cyan-300 mb-6">My Bookings</h2>
+            <h2 className="text-2xl font-semibold text-cyan-300 mb-6">
+              My Bookings
+            </h2>
             <MyBookings token={token} apiBase={API} />
           </div>
         )}

@@ -5,7 +5,15 @@ import AdminUsers from '../components/admin/AdminUsers.js';
 import AdminBookings from '../components/admin/AdminBookings.js';
 import AdminSlots from '../components/admin/AdminSlots.js';
 import AdminNets from '../components/admin/AdminNets.js';
-import { LogOut as IconLogout, User, Home, Users, CalendarDays, Network, Clock } from "lucide-react";
+import {
+  LogOut as IconLogout,
+  User,
+  Home,
+  Users,
+  CalendarDays,
+  Network,
+  Clock,
+} from 'lucide-react';
 
 export default function AdminDashboard({ currentUser, token, onLogout }) {
   const loc = useLocation();
@@ -15,7 +23,7 @@ export default function AdminDashboard({ currentUser, token, onLogout }) {
     { to: 'users', label: 'Users', icon: Users },
     { to: 'bookings', label: 'Bookings', icon: CalendarDays },
     { to: 'nets', label: 'Nets', icon: Network },
-    { to: 'slots', label: 'Slots', icon: Clock }
+    { to: 'slots', label: 'Slots', icon: Clock },
   ];
 
   const displayName = currentUser?.email
@@ -30,11 +38,13 @@ export default function AdminDashboard({ currentUser, token, onLogout }) {
           <div className="text-2xl font-bold tracking-tight">
             Cricket<span className="text-indigo-300">Academy</span>
           </div>
-          <div className="text-sm text-indigo-100 opacity-80 mt-1">Admin Panel</div>
+          <div className="text-sm text-indigo-100 opacity-80 mt-1">
+            Admin Panel
+          </div>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-2">
-          {tabs.map((t) => {
+          {tabs.map(t => {
             const isActive =
               (t.to === '.' && loc.pathname.endsWith('/admin')) ||
               loc.pathname.endsWith(`/admin/${t.to}`) ||
@@ -75,7 +85,9 @@ export default function AdminDashboard({ currentUser, token, onLogout }) {
       {/* Main Content */}
       <main className="flex-1 flex flex-col">
         <header className="sticky top-0 bg-white border-b px-6 py-4 shadow-sm flex justify-between items-center z-10">
-          <h1 className="text-2xl font-semibold text-gray-800">Admin Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-gray-800">
+            Admin Dashboard
+          </h1>
         </header>
 
         <section className="flex-1 p-6">

@@ -84,8 +84,8 @@ export default function AuthForm({
       setLocalLoading(false);
     }
   }
-  
-  const tabClass = (t) =>
+
+  const tabClass = t =>
     `px-4 py-2 rounded-md text-sm ${
       mode === t
         ? 'bg-white text-indigo-700 shadow'
@@ -122,13 +122,15 @@ export default function AuthForm({
           Welcome Back <span className="inline-block">👋</span>
         </h2>
 
-        <form onSubmit={mode === 'login' ? handleLoginSubmit : handleRegisterSubmit}>
+        <form
+          onSubmit={mode === 'login' ? handleLoginSubmit : handleRegisterSubmit}
+        >
           {mode === 'register' && (
             <div className="mb-3">
               <label className="block text-sm text-gray-300 mb-1">Name</label>
               <input
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 className="w-full bg-[#0e1620] border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none"
                 placeholder="Your name"
               />
@@ -140,7 +142,7 @@ export default function AuthForm({
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               className="w-full bg-[#0e1620] border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none"
               placeholder="you@example.com"
             />
@@ -151,7 +153,7 @@ export default function AuthForm({
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               className="w-full bg-[#0e1620] border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none"
               placeholder="••••••••"
             />
@@ -159,11 +161,13 @@ export default function AuthForm({
 
           {mode === 'register' && (
             <div className="mb-3">
-              <label className="block text-sm text-gray-300 mb-1">Confirm password</label>
+              <label className="block text-sm text-gray-300 mb-1">
+                Confirm password
+              </label>
               <input
                 type="password"
                 value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
+                onChange={e => setConfirm(e.target.value)}
                 className="w-full bg-[#0e1620] border border-gray-700 rounded px-3 py-2 placeholder-gray-400 focus:outline-none"
                 placeholder="Repeat password"
               />
@@ -176,7 +180,11 @@ export default function AuthForm({
               disabled={busy}
               className="w-full bg-white text-indigo-700 py-3 rounded-lg font-semibold hover:shadow"
             >
-              {busy ? 'Please wait…' : mode === 'login' ? 'Login' : 'Create account'}
+              {busy
+                ? 'Please wait…'
+                : mode === 'login'
+                  ? 'Login'
+                  : 'Create account'}
             </button>
           </div>
         </form>
@@ -184,7 +192,8 @@ export default function AuthForm({
         {msg && <div className="mt-3 text-sm text-red-300">{msg}</div>}
 
         <div className="mt-6 text-center text-xs text-gray-400">
-          By using this you agree to term and conditions. This is not a production app.
+          By using this you agree to term and conditions. This is not a
+          production app.
         </div>
       </div>
     </div>

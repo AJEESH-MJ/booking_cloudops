@@ -2,22 +2,29 @@ import User from '../models/user.model.js';
 import Booking from '../models/booking.model.js';
 import Net from '../models/nets.model.js';
 import Slot from '../models/slot.model.js';
-import { generateSlotsForNet } from '../utils/slotGenerator.js';
 
 export async function listUsers(req, res, next) {
   try {
-    const users = await User.find().select('-passwordHash -refreshToken').lean();
+    const users = await User.find()
+      .select('-passwordHash -refreshToken')
+      .lean();
     res.json(users);
-  } catch (err) { next(err); }
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function getUser(req, res, next) {
   try {
     const { id } = req.params;
-    const user = await User.findById(id).select('-passwordHash -refreshToken').lean();
+    const user = await User.findById(id)
+      .select('-passwordHash -refreshToken')
+      .lean();
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
-  } catch (err) { next(err); }
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function listBookings(req, res, next) {
@@ -27,9 +34,14 @@ export async function listBookings(req, res, next) {
     if (date) q.date = date;
     if (netId) q.net = netId;
     if (userId) q.user = userId;
-    const bookings = await Booking.find(q).populate('user net').sort({ startAt: -1 }).lean();
+    const bookings = await Booking.find(q)
+      .populate('user net')
+      .sort({ startAt: -1 })
+      .lean();
     res.json(bookings);
-  } catch (err) { next(err); }
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function deleteBooking(req, res, next) {
@@ -39,10 +51,15 @@ export async function deleteBooking(req, res, next) {
     if (!bk) return res.status(404).json({ error: 'Booking not found' });
 
     // clear booked flags on slots that reference this booking
-    await Slot.updateMany({ booking: bk._id }, { $set: { booked: false, booking: null } });
+    await Slot.updateMany(
+      { booking: bk._id },
+      { $set: { booked: false, booking: null } }
+    );
 
     res.json({ ok: true });
-  } catch (err) { next(err); }
+  } catch (err) {
+    next(err);
+  }
 }
 
 /*
@@ -55,7 +72,14 @@ export async function deleteBooking(req, res, next) {
 */
 export async function createSlots(req, res, next) {
   try {
-    const { netId, date, startTime, endTime, intervalMinutes = 30, slots } = req.body;
+    const {
+      netId,
+      date,
+      startTime,
+      endTime,
+      intervalMinutes = 30,
+      slots,
+    } = req.body;
     if (!netId) return res.status(400).json({ error: 'netId required' });
 
     const net = await Net.findById(netId);
@@ -68,7 +92,15 @@ export async function createSlots(req, res, next) {
       for (const s of slots) {
         const slot = await Slot.updateOne(
           { net: netId, startAt: new Date(s.startAt) },
-          { $setOnInsert: { net: netId, date: new Date(s.startAt).toISOString().slice(0,10), startAt: new Date(s.startAt), endAt: new Date(s.endAt), booked: false } },
+          {
+            $setOnInsert: {
+              net: netId,
+              date: new Date(s.startAt).toISOString().slice(0, 10),
+              startAt: new Date(s.startAt),
+              endAt: new Date(s.endAt),
+              booked: false,
+            },
+          },
           { upsert: true }
         );
         created.push(s);
@@ -88,7 +120,15 @@ export async function createSlots(req, res, next) {
         e.setMinutes(e.getMinutes() + Number(intervalMinutes));
         await Slot.updateOne(
           { net: netId, startAt: s },
-          { $setOnInsert: { net: netId, date, startAt: s, endAt: e, booked: false } },
+          {
+            $setOnInsert: {
+              net: netId,
+              date,
+              startAt: s,
+              endAt: e,
+              booked: false,
+            },
+          },
           { upsert: true }
         );
         created.push({ startAt: s.toISOString(), endAt: e.toISOString() });
@@ -107,9 +147,11 @@ export async function createSlots(req, res, next) {
 export async function stats(req, res, next) {
   try {
     const totalBookings = await Booking.countDocuments();
-    const todays = new Date().toISOString().slice(0,10);
+    const todays = new Date().toISOString().slice(0, 10);
     const bookingsToday = await Booking.countDocuments({ date: todays });
     const activeNets = await Net.countDocuments({ active: true });
     res.json({ totalBookings, bookingsToday, activeNets });
-  } catch (err) { next(err); }
+  } catch (err) {
+    next(err);
+  }
 }

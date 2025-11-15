@@ -3,7 +3,13 @@ import api from '../../utils/api.js';
 
 function IconTrash(props) {
   return (
-    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      {...props}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <path d="M3 6h18" />
       <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" />
       <path d="M10 11v6" />
@@ -15,7 +21,13 @@ function IconTrash(props) {
 
 function IconSearch(props) {
   return (
-    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <svg
+      {...props}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    >
       <circle cx="11" cy="11" r="6" />
       <path d="M21 21l-4.35-4.35" />
     </svg>
@@ -30,8 +42,15 @@ function ConfirmModal({ open, title, description, onConfirm, onCancel }) {
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
         <p className="text-sm text-gray-600 mb-4">{description}</p>
         <div className="flex justify-end gap-3">
-          <button onClick={onCancel} className="px-3 py-2 rounded border">Cancel</button>
-          <button onClick={onConfirm} className="px-3 py-2 rounded bg-red-600 text-white">Delete</button>
+          <button onClick={onCancel} className="px-3 py-2 rounded border">
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-3 py-2 rounded bg-red-600 text-white"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -58,7 +77,9 @@ export default function AdminUsers() {
         setUsers(res.data || []);
       } catch (err) {
         console.error('load users', err);
-        alert('Failed to load users: ' + (err.response?.data?.error || err.message));
+        alert(
+          'Failed to load users: ' + (err.response?.data?.error || err.message)
+        );
       } finally {
         if (mounted) setLoading(false);
       }
@@ -70,7 +91,9 @@ export default function AdminUsers() {
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     if (!term) return users;
-    return users.filter(u => (u.name || u.email || '').toLowerCase().includes(term));
+    return users.filter(u =>
+      (u.name || u.email || '').toLowerCase().includes(term)
+    );
   }, [q, users]);
 
   const pages = Math.max(1, Math.ceil(filtered.length / perPage));
@@ -105,7 +128,10 @@ export default function AdminUsers() {
           <div className="relative">
             <input
               value={q}
-              onChange={(e) => { setQ(e.target.value); setPage(1); }}
+              onChange={e => {
+                setQ(e.target.value);
+                setPage(1);
+              }}
               placeholder="Search by name or email"
               className="pl-10 pr-3 py-2 border rounded w-64 focus:outline-none focus:ring"
             />
@@ -122,9 +148,13 @@ export default function AdminUsers() {
             <thead className="bg-gray-50 text-left">
               <tr>
                 <th className="px-4 py-3 text-sm text-gray-600">Name</th>
-                <th className="px-4 py-3 text-sm text-gray-600 hidden sm:table-cell">Email</th>
+                <th className="px-4 py-3 text-sm text-gray-600 hidden sm:table-cell">
+                  Email
+                </th>
                 <th className="px-4 py-3 text-sm text-gray-600">Role</th>
-                <th className="px-4 py-3 text-sm text-gray-600 text-right">Actions</th>
+                <th className="px-4 py-3 text-sm text-gray-600 text-right">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -133,25 +163,48 @@ export default function AdminUsers() {
                 // loading skeleton rows
                 Array.from({ length: perPage }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-4 py-4"><div className="h-4 bg-gray-200 rounded w-32" /></td>
-                    <td className="px-4 py-4 hidden sm:table-cell"><div className="h-4 bg-gray-200 rounded w-48" /></td>
-                    <td className="px-4 py-4"><div className="h-4 bg-gray-200 rounded w-20" /></td>
-                    <td className="px-4 py-4 text-right"><div className="h-8 bg-gray-200 rounded w-20 inline-block" /></td>
+                    <td className="px-4 py-4">
+                      <div className="h-4 bg-gray-200 rounded w-32" />
+                    </td>
+                    <td className="px-4 py-4 hidden sm:table-cell">
+                      <div className="h-4 bg-gray-200 rounded w-48" />
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="h-4 bg-gray-200 rounded w-20" />
+                    </td>
+                    <td className="px-4 py-4 text-right">
+                      <div className="h-8 bg-gray-200 rounded w-20 inline-block" />
+                    </td>
                   </tr>
                 ))
               ) : visible.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="px-4 py-6 text-center text-gray-500">No users found.</td>
+                  <td
+                    colSpan="4"
+                    className="px-4 py-6 text-center text-gray-500"
+                  >
+                    No users found.
+                  </td>
                 </tr>
               ) : (
                 visible.map(u => (
                   <tr key={u._id} className="hover:bg-gray-50">
                     <td className="px-4 py-4">
                       <div className="font-medium">{u.name || '—'}</div>
-                      <div className="text-xs text-gray-400 sm:hidden">{u.email}</div>
+                      <div className="text-xs text-gray-400 sm:hidden">
+                        {u.email}
+                      </div>
                     </td>
-                    <td className="px-4 py-4 hidden sm:table-cell"><div className="text-sm text-gray-600">{u.email}</div></td>
-                    <td className="px-4 py-4"><span className={`inline-block px-2 py-1 text-xs rounded ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700'}`}>{u.role}</span></td>
+                    <td className="px-4 py-4 hidden sm:table-cell">
+                      <div className="text-sm text-gray-600">{u.email}</div>
+                    </td>
+                    <td className="px-4 py-4">
+                      <span
+                        className={`inline-block px-2 py-1 text-xs rounded ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700'}`}
+                      >
+                        {u.role}
+                      </span>
+                    </td>
                     <td className="px-4 py-4 text-right">
                       <div className="inline-flex items-center gap-2">
                         <button
@@ -172,7 +225,10 @@ export default function AdminUsers() {
 
         {/* pagination */}
         <div className="px-4 py-3 flex items-center justify-between">
-          <div className="text-sm text-gray-600">Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}–{Math.min(page * perPage, filtered.length)} of {filtered.length}</div>
+          <div className="text-sm text-gray-600">
+            Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}–
+            {Math.min(page * perPage, filtered.length)} of {filtered.length}
+          </div>
 
           <div className="flex items-center gap-2">
             <button

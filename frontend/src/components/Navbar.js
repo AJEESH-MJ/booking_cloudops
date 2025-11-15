@@ -1,12 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FiUser, FiLogOut } from "react-icons/fi";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FiUser, FiLogOut } from 'react-icons/fi';
 
 export default function Navbar({ user, onLogout }) {
   const displayName = user?.email
-    ? user.email.split("@")[0].charAt(0).toUpperCase() +
-      user.email.split("@")[0].slice(1)
-    : "";
+    ? user.email.split('@')[0].charAt(0).toUpperCase() +
+      user.email.split('@')[0].slice(1)
+    : '';
 
   return (
     <nav className="w-full bg-[#0a0f1f] border-b border-cyan-500/20 shadow-[0_2px_20px_rgba(0,255,255,0.05)] sticky top-0 z-50">
@@ -23,7 +23,7 @@ export default function Navbar({ user, onLogout }) {
 
         {/* Right section */}
         <div className="flex items-center gap-6">
-          {user?.role === "admin" && (
+          {user?.role === 'admin' && (
             <Link
               to="/admin"
               className="text-sm text-cyan-300 font-medium border border-cyan-400/20 rounded-md px-3 py-1 hover:bg-cyan-500/10 hover:shadow-[0_0_10px_rgba(0,255,255,0.3)] transition-all"

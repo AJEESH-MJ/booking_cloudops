@@ -1,26 +1,24 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { API } from "../App.js";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { API } from '../App.js';
 
 export default function AvailabilityPanel({
   selectedNet,
   slotInterval = 60,
-  businessStart = "06:00",
-  businessEnd = "22:00",
+  businessStart = '06:00',
+  businessEnd = '22:00',
 }) {
-  const [date, setDate] = useState(() =>
-    new Date().toISOString().slice(0, 10)
-  );
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [slots, setSlots] = useState([]);
   const [freeStarts, setFreeStarts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [selectedSlot, setSelectedSlot] = useState(null);
 
   // Build time slots
   useEffect(() => {
-    const [sh, sm] = businessStart.split(":").map(Number);
-    const [eh, em] = businessEnd.split(":").map(Number);
+    const [sh, sm] = businessStart.split(':').map(Number);
+    const [eh, em] = businessEnd.split(':').map(Number);
     const start = new Date(`${date}T${businessStart}:00`);
     const end = new Date(`${date}T${businessEnd}:00`);
 
@@ -44,12 +42,12 @@ export default function AvailabilityPanel({
         const res = await axios.get(`${API}/availability`, {
           params: { date, duration: slotInterval, netIds: selectedNet._id },
         });
-        const starts = (res.data || []).map((o) =>
+        const starts = (res.data || []).map(o =>
           new Date(o.startAt).toISOString()
         );
         setFreeStarts(starts);
       } catch (err) {
-        setMessage("Unable to fetch availability. Showing offline view.");
+        setMessage('Unable to fetch availability. Showing offline view.');
         setFreeStarts([]);
       } finally {
         setLoading(false);
@@ -58,14 +56,13 @@ export default function AvailabilityPanel({
     fetchFree();
   }, [selectedNet, date, slotInterval]);
 
-  const isFree = (slot) =>
-    freeStarts.includes(slot.start.toISOString());
+  const isFree = slot => freeStarts.includes(slot.start.toISOString());
 
-  const handleBookClick = (slot) => setSelectedSlot(slot);
+  const handleBookClick = slot => setSelectedSlot(slot);
 
   const confirmBooking = () => {
     const iso = selectedSlot.start.toISOString();
-    setFreeStarts((prev) => prev.filter((s) => s !== iso));
+    setFreeStarts(prev => prev.filter(s => s !== iso));
     setMessage(
       `Booked ${new Date(selectedSlot.start).toLocaleTimeString()} (demo only)`
     );
@@ -76,7 +73,7 @@ export default function AvailabilityPanel({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="text-sm text-gray-300">
-          {selectedNet ? selectedNet.name : "Choose net"}
+          {selectedNet ? selectedNet.name : 'Choose net'}
         </div>
       </div>
 
@@ -85,7 +82,7 @@ export default function AvailabilityPanel({
           type="date"
           className="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
           value={date}
-          onChange={(e) => setDate(e.target.value)}
+          onChange={e => setDate(e.target.value)}
         />
         <div className="ml-auto text-sm text-gray-300">
           <span className="inline-block w-3 h-3 bg-green-400 rounded-full mr-2" />
@@ -103,22 +100,22 @@ export default function AvailabilityPanel({
               key={idx}
               className={`p-4 rounded-xl border border-white/20 backdrop-blur-sm transition-all ${
                 free
-                  ? "bg-green-400/20 hover:shadow-green-500/30 cursor-pointer"
-                  : "bg-red-400/10 opacity-70"
+                  ? 'bg-green-400/20 hover:shadow-green-500/30 cursor-pointer'
+                  : 'bg-red-400/10 opacity-70'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-semibold text-white">
                     {slot.start.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
+                      hour: '2-digit',
+                      minute: '2-digit',
                     })}
                   </div>
                   <div className="text-sm text-gray-300">
                     {slot.end.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
+                      hour: '2-digit',
+                      minute: '2-digit',
                     })}
                   </div>
                 </div>
@@ -152,7 +149,7 @@ export default function AvailabilityPanel({
               Confirm Booking
             </h3>
             <p className="text-sm text-gray-200 mb-4">
-              Book <span className="font-semibold">{selectedNet?.name}</span> at{" "}
+              Book <span className="font-semibold">{selectedNet?.name}</span> at{' '}
               {new Date(selectedSlot.start).toLocaleTimeString()}?
             </p>
             <div className="flex justify-end gap-3">
