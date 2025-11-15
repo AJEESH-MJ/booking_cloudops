@@ -40,9 +40,9 @@ export async function login(req, res, next) {
     const valid = user.verifyPassword
       ? await user.verifyPassword(password)
       : await bcrypt.compare(
-        password,
-        user.password || user.passwordHash || ''
-      );
+          password,
+          user.password || user.passwordHash || ''
+        );
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
     // build minimal token payload (optional: include role here)

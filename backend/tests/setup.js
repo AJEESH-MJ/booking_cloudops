@@ -1,3 +1,3 @@
 export default async () => {
-  console.log("✓ Global test setup completed");
+  console.log('✓ Global test setup completed');
 };

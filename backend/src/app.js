@@ -7,10 +7,9 @@ import connectDB from './config/database.js';
 
 const app = express();
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== 'test') {
   connectDB();
 }
-
 
 app.use(express.json());
 app.use(morgan('dev'));
