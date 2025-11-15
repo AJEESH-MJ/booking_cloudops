@@ -4,4 +4,3 @@ backend/node_modules/
 /dist
 .DS_Store
 frontend/node_modules/
-node_modules/

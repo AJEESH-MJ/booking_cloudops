@@ -13,10 +13,14 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "jest --runInBand"
-  },
+  "dev": "node --watch src/index.js",
+  "start": "node src/index.js",
+  "test": "jest --runInBand",
+  "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+},
   "browserslist": {
     "production": [
       ">0.2%",

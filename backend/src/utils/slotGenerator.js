@@ -40,7 +40,7 @@ export async function generateSlotsForNet(net, daysAhead = SLOT_DAYS_AHEAD) {
           { upsert: true }
         );
       } catch (err) {
-        // ignore unique conflicts
+        console.log(err)
       }
       ptr.add(SLOT_INTERVAL_MIN, 'minutes');
     }

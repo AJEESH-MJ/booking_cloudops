@@ -4,10 +4,7 @@
   "description": "",
   "main": "eslint.config.js",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    
   },
   "repository": {
     "type": "git",
