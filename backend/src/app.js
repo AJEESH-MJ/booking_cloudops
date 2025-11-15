@@ -3,8 +3,14 @@ import morgan from 'morgan';
 import cors from 'cors';
 import routes from './routes/index.js';
 import errorHandler from './middleware/error.middleware.js';
+import connectDB from './config/database.js';
 
 const app = express();
+
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
+
 
 app.use(express.json());
 app.use(morgan('dev'));
