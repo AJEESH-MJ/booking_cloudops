@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import seed from "../../scripts/seed.js";
 
 let mongo = null;
 
@@ -12,6 +13,8 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  await seed();
 });
 
 afterAll(async () => {

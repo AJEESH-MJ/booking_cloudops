@@ -1,0 +1,8 @@
+name: Booking_Cloudops
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  mongo-init
