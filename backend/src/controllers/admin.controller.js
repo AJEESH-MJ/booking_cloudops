@@ -62,14 +62,6 @@ export async function deleteBooking(req, res, next) {
   }
 }
 
-/*
- Create slots for a plain list or a range.
- Request body options:
- - netId (required)
- - date (YYYY-MM-DD) and times: either
-    - startTime (HH:mm) and endTime (HH:mm) with intervalMinutes (30)
-    - OR slots: array of { startAtISO, endAtISO } for explicit slots
-*/
 export async function createSlots(req, res, next) {
   try {
     const {
@@ -103,6 +95,7 @@ export async function createSlots(req, res, next) {
           },
           { upsert: true }
         );
+        console.log(slot);
         created.push(s);
       }
     } else if (date && startTime && endTime) {

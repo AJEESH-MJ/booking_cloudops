@@ -1,4 +1,3 @@
-import React from 'react';
 import { GiCricketBat } from 'react-icons/gi';
 
 export default function VisualNets({ nets = [], selected, onSelect }) {

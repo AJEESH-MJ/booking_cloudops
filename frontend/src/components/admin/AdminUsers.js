@@ -1,55 +1,36 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import api from '../../utils/api.js';
+import { IconSearch, IconTrash } from '@tabler/icons-react';
 
-function IconTrash(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path d="M3 6h18" />
-      <path d="M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" />
-      <path d="M10 11v6" />
-      <path d="M14 11v6" />
-      <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-    </svg>
-  );
-}
-
-function IconSearch(props) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <circle cx="11" cy="11" r="6" />
-      <path d="M21 21l-4.35-4.35" />
-    </svg>
-  );
-}
-
-function ConfirmModal({ open, title, description, onConfirm, onCancel }) {
+function ConfirmModal({
+  open,
+  title,
+  description,
+  onConfirm,
+  onCancel,
+  loading,
+}) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-lg w-11/12 sm:w-2/5 p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
+      <div className="bg-white rounded shadow-lg z-10 w-11/12 max-w-md p-4">
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-gray-600 mb-4">{description}</p>
-        <div className="flex justify-end gap-3">
-          <button onClick={onCancel} className="px-3 py-2 rounded border">
+        <div className="text-sm text-gray-600 mb-4">{description}</div>
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={onCancel}
+            className="px-3 py-1 rounded border"
+            disabled={loading}
+          >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-3 py-2 rounded bg-red-600 text-white"
+            className="px-3 py-1 rounded bg-red-600 text-white"
+            disabled={loading}
           >
-            Delete
+            {loading ? 'Deleting...' : 'Delete'}
           </button>
         </div>
       </div>
@@ -65,6 +46,7 @@ export default function AdminUsers() {
   const perPage = 8;
 
   const [toDelete, setToDelete] = useState(null);
+  // Use 'deleting' and reference its value in the modal (so it's not an unused variable)
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -91,8 +73,11 @@ export default function AdminUsers() {
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
     if (!term) return users;
-    return users.filter(u =>
-      (u.name || u.email || '').toLowerCase().includes(term)
+
+    return users.filter(
+      u =>
+        (u.name && u.name.toLowerCase().includes(term)) ||
+        (u.email && u.email.toLowerCase().includes(term))
     );
   }, [q, users]);
 
@@ -160,7 +145,6 @@ export default function AdminUsers() {
 
             <tbody>
               {loading ? (
-                // loading skeleton rows
                 Array.from({ length: perPage }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
                     <td className="px-4 py-4">
@@ -223,7 +207,6 @@ export default function AdminUsers() {
           </table>
         </div>
 
-        {/* pagination */}
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="text-sm text-gray-600">
             Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}–
@@ -256,12 +239,8 @@ export default function AdminUsers() {
         description={`Delete user "${toDelete?.email || toDelete?.name}"? This action cannot be undone.`}
         onConfirm={confirmDeleteUser}
         onCancel={() => setToDelete(null)}
+        loading={deleting}
       />
     </div>
   );
-
-  // helper extracted to keep JSX small
-  function confirmDeleteUser() {
-    // implemented above — placeholder only to satisfy linter if moved
-  }
 }

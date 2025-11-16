@@ -24,13 +24,6 @@ export default function Home({ onLogin }) {
   const [tab, setTab] = useState('login');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
-  const [regForm, setRegForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirm: '',
-  });
 
   const navigate = useNavigate();
 
@@ -46,7 +39,6 @@ export default function Home({ onLogin }) {
       onLogin(token, user);
       setToast('Login successful');
 
-      // redirect based on user role
       if (user?.role === 'admin') {
         navigate('/admin', { replace: true });
       } else {

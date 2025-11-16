@@ -15,7 +15,7 @@ import {
   Clock,
 } from 'lucide-react';
 
-export default function AdminDashboard({ currentUser, token, onLogout }) {
+export default function AdminDashboard({ currentUser, _token, onLogout }) {
   const loc = useLocation();
 
   const tabs = [

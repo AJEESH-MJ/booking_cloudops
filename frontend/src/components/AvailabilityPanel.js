@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API } from '../App.js';
 
@@ -17,8 +17,6 @@ export default function AvailabilityPanel({
 
   // Build time slots
   useEffect(() => {
-    const [sh, sm] = businessStart.split(':').map(Number);
-    const [eh, em] = businessEnd.split(':').map(Number);
     const start = new Date(`${date}T${businessStart}:00`);
     const end = new Date(`${date}T${businessEnd}:00`);
 
@@ -34,6 +32,7 @@ export default function AvailabilityPanel({
     setSlots(t);
   }, [date, slotInterval, businessStart, businessEnd]);
 
+  // Fetch free slots
   useEffect(() => {
     async function fetchFree() {
       if (!selectedNet) return setFreeStarts([]);
@@ -43,25 +42,28 @@ export default function AvailabilityPanel({
           params: { date, duration: slotInterval, netIds: selectedNet._id },
         });
         const starts = (res.data || []).map(o =>
-          new Date(o.startAt).toISOString()
+          new Date(o.startAt).toISOString().slice(0, 19)
         );
         setFreeStarts(starts);
       } catch (err) {
         setMessage('Unable to fetch availability. Showing offline view.');
+        console.error(err);
         setFreeStarts([]);
       } finally {
         setLoading(false);
       }
     }
     fetchFree();
+    setSelectedSlot(null); // reset selection on fetch
   }, [selectedNet, date, slotInterval]);
 
-  const isFree = slot => freeStarts.includes(slot.start.toISOString());
+  const isFree = slot =>
+    freeStarts.includes(slot.start.toISOString().slice(0, 19));
 
   const handleBookClick = slot => setSelectedSlot(slot);
 
   const confirmBooking = () => {
-    const iso = selectedSlot.start.toISOString();
+    const iso = selectedSlot.start.toISOString().slice(0, 19);
     setFreeStarts(prev => prev.filter(s => s !== iso));
     setMessage(
       `Booked ${new Date(selectedSlot.start).toLocaleTimeString()} (demo only)`
@@ -93,11 +95,11 @@ export default function AvailabilityPanel({
       </div>
 
       <div className="grid sm:grid-cols-2 gap-3">
-        {slots.map((slot, idx) => {
+        {slots.map(slot => {
           const free = isFree(slot);
           return (
             <div
-              key={idx}
+              key={slot.start.toISOString()}
               className={`p-4 rounded-xl border border-white/20 backdrop-blur-sm transition-all ${
                 free
                   ? 'bg-green-400/20 hover:shadow-green-500/30 cursor-pointer'
@@ -122,6 +124,7 @@ export default function AvailabilityPanel({
                 {free ? (
                   <button
                     onClick={() => handleBookClick(slot)}
+                    disabled={loading}
                     className="bg-gradient-to-r from-cyan-500 to-indigo-500 px-3 py-1 rounded-lg text-sm hover:scale-105 transition-all"
                   >
                     Book

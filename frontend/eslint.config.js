@@ -1,12 +1,22 @@
 import js from '@eslint/js';
+import react from 'eslint-plugin-react';
+import { FlatCompat } from '@eslint/eslintrc';
+
+const compat = new FlatCompat();
 
 export default [
   js.configs.recommended,
+
+  ...compat.extends('plugin:react/recommended'),
+
   {
-    files: ['backend/**/*.js', 'frontend/**/*.js'],
+    files: ['src/**/*.js', 'src/**/*.jsx', 'tests/**/*.js'],
     languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         console: 'readonly',
         process: 'readonly',
@@ -14,10 +24,32 @@ export default [
         __dirname: 'readonly',
         __filename: 'readonly',
         URL: 'readonly',
+
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
+
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        XMLHttpRequest: 'readonly',
+        Fetch: 'readonly',
+
+        alert: 'readonly',
+        module: 'readonly',
+
+        test: 'readonly',
+      },
+    },
+
+    plugins: { react },
+
+    settings: {
+      react: {
+        version: 'detect',
       },
     },
     rules: {
@@ -31,24 +63,45 @@ export default [
       'no-var': 'error',
       'object-shorthand': 'error',
       'prefer-arrow-callback': 'error',
+
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
     },
   },
+
   {
-    files: ['tests/**/*.js'],
+    files: ['tests/**/*.js', 'tests/**/*.jsx'],
     languageOptions: {
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
       globals: {
         describe: 'readonly',
         it: 'readonly',
+        test: 'readonly',
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
         jest: 'readonly',
+
+        window: 'readonly',
+        document: 'readonly',
+        localStorage: 'readonly',
       },
     },
   },
+
   {
-    ignores: ['node_modules/**', 'coverage/**', 'logs/**', 'drizzle/**'],
+    ignores: [
+      'node_modules/**',
+      'coverage/**',
+      'logs/**',
+      'drizzle/**',
+      'tailwind*',
+    ],
   },
 ];

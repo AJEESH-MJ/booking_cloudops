@@ -16,7 +16,7 @@ export function requireAuth(req, res, next) {
     req.user = { id: payload.sub, role: payload.role };
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: 'Invalid token', err });
   }
 }
 

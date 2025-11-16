@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Home from './pages/Home.js';
 import Main from './pages/Main.js';
@@ -24,7 +24,7 @@ function App() {
     try {
       const parts = t.split('.');
       if (parts.length === 3) {
-        const payload = JSON.parse(atob(parts[1]));
+        const payload = JSON.parse(window.atob(parts[1]));
         return {
           id: payload.id || payload.sub,
           role: payload.role,
@@ -32,7 +32,9 @@ function App() {
           name: payload.name ?? null,
         };
       }
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
     return null;
   };
 
@@ -46,7 +48,6 @@ function App() {
     setRestored(true);
   }, []);
 
-  // --- Handle Login ---
   const handleLogin = (newToken, user = null) => {
     setToken(newToken);
     const decodedUser = user || decodeToken(newToken);
@@ -56,7 +57,6 @@ function App() {
     });
   };
 
-  // --- Handle Logout ---
   const handleLogout = () => {
     setToken(null);
     setCurrentUser(null);

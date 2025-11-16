@@ -1,11 +1,11 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiUser, FiLogOut } from 'react-icons/fi';
+import { FiLogOut } from 'react-icons/fi';
 
 export default function Navbar({ user, onLogout }) {
   const displayName = user?.email
-    ? user.email.split('@')[0].charAt(0).toUpperCase() +
-      user.email.split('@')[0].slice(1)
+    ? `${user.email.split('@')[0].charAt(0).toUpperCase()}${user.email
+        .split('@')[0]
+        .slice(1)}`
     : '';
 
   return (

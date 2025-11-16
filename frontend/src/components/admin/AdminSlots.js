@@ -1,8 +1,6 @@
-// frontend/src/components/admin/AdminSlots.js
 import React, { useEffect, useState } from 'react';
 import api from '../../utils/api.js';
 
-/* small Toast */
 function Toast({ message, onClose }) {
   if (!message) return null;
   return (
@@ -17,7 +15,6 @@ function Toast({ message, onClose }) {
   );
 }
 
-/* small icons */
 function IconClock() {
   return (
     <svg
@@ -67,7 +64,6 @@ export default function AdminSlots() {
   const [nets, setNets] = useState([]);
   const [loadingNets, setLoadingNets] = useState(true);
 
-  // form
   const [form, setForm] = useState({
     netId: '',
     date: '',
@@ -76,16 +72,13 @@ export default function AdminSlots() {
     intervalMinutes: 30,
   });
 
-  // availability (existing slots for selected date & net)
   const [availSlots, setAvailSlots] = useState([]);
   const [loadingAvail, setLoadingAvail] = useState(false);
 
-  // create state & toast
   const [creating, setCreating] = useState(false);
   const [toast, setToast] = useState('');
 
-  // confirm deletion
-  const [deletingId, setDeletingId] = useState(null);
+  // const [deletingId, setDeletingId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -108,7 +101,6 @@ export default function AdminSlots() {
     };
   }, []);
 
-  // load availability for selected net and date
   async function loadAvailability() {
     if (!form.netId || !form.date) {
       setAvailSlots([]);
@@ -128,7 +120,6 @@ export default function AdminSlots() {
     }
   }
 
-  // create slots for single date
   async function handleCreateSlots(e) {
     e?.preventDefault?.();
     if (!form.netId) return setToast('Please select a net');
@@ -145,7 +136,6 @@ export default function AdminSlots() {
       const res = await api.post('/admin/slots', payload);
       const created = res.data?.created?.length ?? 0;
       setToast(`Created ${created} slots`);
-      // refresh availability
       await loadAvailability();
     } catch (err) {
       console.error('create slots', err);
@@ -157,10 +147,8 @@ export default function AdminSlots() {
     }
   }
 
-  // delete slot (backend may or may not support; show friendly message if not)
   async function handleDeleteSlot(slotId) {
     if (!slotId) return;
-    // confirm via modal-like prompt (keeps UI simple)
     const ok = window.confirm('Delete this slot? This cannot be undone.');
     if (!ok) return;
     setDeleting(true);
@@ -182,7 +170,6 @@ export default function AdminSlots() {
     }
   }
 
-  // helper to pretty-format time ranges
   const formatTime = (startAt, endAt) => {
     try {
       const s = new Date(startAt);

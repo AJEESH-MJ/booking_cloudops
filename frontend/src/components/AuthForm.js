@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../utils/api.js';
+import PropTypes from 'prop-types';
 
 export default function AuthForm({
   initialMode = 'login',
@@ -199,3 +200,12 @@ export default function AuthForm({
     </div>
   );
 }
+
+AuthForm.propTypes = {
+  initialMode: PropTypes.string,
+  onLogin: PropTypes.func,
+  onLoginSubmit: PropTypes.func,
+  onRegisterSubmit: PropTypes.func,
+  loading: PropTypes.bool,
+  setTab: PropTypes.func,
+};

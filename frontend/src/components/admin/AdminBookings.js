@@ -278,7 +278,7 @@ export default function AdminBookings() {
       <ConfirmModal
         open={!!toDelete}
         title="Delete booking"
-        description={`Delete selected booking? This action cannot be undone.`}
+        description={'Delete selected booking? This action cannot be undone.'}
         onConfirm={() => {
           /* placeholder */
         }}
