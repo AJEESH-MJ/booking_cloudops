@@ -13,7 +13,6 @@ export default function Navbar({ user, onLogout }) {
   return (
     <nav className="w-full bg-[#0a0f1f] border-b border-cyan-500/20 shadow-[0_2px_20px_rgba(0,255,255,0.05)] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Brand */}
         <Link
           to="/"
           className="text-2xl font-bold tracking-tight text-white relative group"
