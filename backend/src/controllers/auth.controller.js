@@ -36,16 +36,19 @@ export async function login(req, res, next) {
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-    // adapt depending on your model's method name
-    const valid = user.verifyPassword
-      ? await user.verifyPassword(password)
-      : await bcrypt.compare(
-        password,
-        user.password || user.passwordHash || ''
-      );
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+    let valid;
 
-    // build minimal token payload (optional: include role here)
+    if (user.verifyPassword) {
+      valid = await user.verifyPassword(password);
+    } else {
+      const hash = user.password || user.passwordHash || '';
+      valid = await bcrypt.compare(password, hash);
+    }
+
+    if (!valid) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
     const payload = {
       id: user._id.toString(),
       role: user.role,
@@ -54,7 +57,6 @@ export async function login(req, res, next) {
 
     const token = createAccessToken(payload);
 
-    // Respond with token + safe user object (omit sensitive fields)
     const safeUser = {
       id: user._id.toString(),
       email: user.email,
