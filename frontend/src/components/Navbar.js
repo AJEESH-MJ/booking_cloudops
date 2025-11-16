@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom';
 import { FiLogOut } from 'react-icons/fi';
 
 export default function Navbar({ user, onLogout }) {
-  const displayName = user?.email
-    ? `${user.email.split('@')[0].charAt(0).toUpperCase()}${user.email
-        .split('@')[0]
-        .slice(1)}`
-    : '';
+  const toDisplayName = email => {
+    if (!email) return '';
+    const name = email.split('@')[0];
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
+  const displayName = toDisplayName(user?.email);
 
   return (
     <nav className="w-full bg-[#0a0f1f] border-b border-cyan-500/20 shadow-[0_2px_20px_rgba(0,255,255,0.05)] sticky top-0 z-50">
