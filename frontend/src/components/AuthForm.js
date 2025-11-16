@@ -191,21 +191,7 @@ export default function AuthForm({
         </form>
 
         {msg && <div className="mt-3 text-sm text-red-300">{msg}</div>}
-
-        <div className="mt-6 text-center text-xs text-gray-400">
-          By using this you agree to term and conditions. This is not a
-          production app.
-        </div>
       </div>
     </div>
   );
 }
-
-AuthForm.propTypes = {
-  initialMode: PropTypes.string,
-  onLogin: PropTypes.func,
-  onLoginSubmit: PropTypes.func,
-  onRegisterSubmit: PropTypes.func,
-  loading: PropTypes.bool,
-  setTab: PropTypes.func,
-};

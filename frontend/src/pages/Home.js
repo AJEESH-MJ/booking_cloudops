@@ -87,7 +87,7 @@ export default function Home({ onLogin }) {
                 Cricket<span className="text-purple-300">Academy</span>
               </div>
               <div className="text-sm text-indigo-200 mt-1">
-                Admin & Booking Dashboard
+               Booking Dashboard
               </div>
             </div>
 
